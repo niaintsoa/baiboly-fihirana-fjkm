@@ -7,6 +7,7 @@ import 'package:baiboly_apk/presentation/cubits/bible_cubit.dart';
 import 'package:baiboly_apk/presentation/screens/reader_screen.dart';
 import 'package:baiboly_apk/presentation/screens/search_screen.dart';
 import 'package:baiboly_apk/presentation/screens/bookmarks_screen.dart';
+import 'package:baiboly_apk/presentation/screens/fihirana_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   late TabController _tabController;
   BookModel? _lastReadBook;
   int _lastReadChapter = 1;
+  int _currentIndex = 0;
 
   // Verset du jour (Démonstration élégante)
   final List<Map<String, String>> _versesOfTheDay = [
@@ -91,9 +93,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     final theme = Theme.of(context);
     
     return Scaffold(
-      body: SafeArea(
-        child: BlocConsumer<BibleCubit, BibleState>(
-          listener: (context, state) {
+      body: _currentIndex == 0
+          ? SafeArea(
+              child: BlocConsumer<BibleCubit, BibleState>(
+                  listener: (context, state) {
             if (state is BibleBooksLoaded && _lastReadBook == null) {
               // Réessayer de charger le dernier livre lu une fois les livres chargés
               SharedPreferences.getInstance().then((prefs) {
@@ -499,8 +502,44 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               ],
             );
           },
-        );
-      },
+        )
+      : const FihiranaScreen(),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: theme.colorScheme.onSurface.withOpacity(0.06),
+              width: 0.5,
+            ),
+          ),
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          elevation: 0,
+          backgroundColor: theme.colorScheme.surface,
+          selectedFontSize: 11,
+          unselectedFontSize: 11,
+          iconSize: 18,
+          selectedItemColor: theme.colorScheme.primary,
+          unselectedItemColor: theme.colorScheme.onSurface.withOpacity(0.6),
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.menu_book),
+              label: "Baiboly",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.music_note),
+              label: "Fihirana",
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

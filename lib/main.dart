@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:baiboly_apk/data/repositories/bible_repository.dart';
+import 'package:baiboly_apk/data/repositories/fihirana_repository.dart';
 import 'package:baiboly_apk/presentation/cubits/preferences_cubit.dart';
 import 'package:baiboly_apk/presentation/cubits/bible_cubit.dart';
 import 'package:baiboly_apk/presentation/cubits/search_cubit.dart';
 import 'package:baiboly_apk/presentation/cubits/bookmark_cubit.dart';
+import 'package:baiboly_apk/presentation/cubits/fihirana_cubit.dart';
+import 'package:baiboly_apk/presentation/cubits/fihirana_search_cubit.dart';
 import 'package:baiboly_apk/presentation/theme/app_theme.dart';
 import 'package:baiboly_apk/presentation/screens/home_screen.dart';
 
@@ -13,11 +16,13 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   final bibleRepository = BibleRepository();
+  final fihiranaRepository = FihiranaRepository();
 
   runApp(
     MultiRepositoryProvider(
       providers: [
         RepositoryProvider<BibleRepository>.value(value: bibleRepository),
+        RepositoryProvider<FihiranaRepository>.value(value: fihiranaRepository),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -32,6 +37,12 @@ void main() {
           ),
           BlocProvider<BookmarkCubit>(
             create: (context) => BookmarkCubit(bibleRepository),
+          ),
+          BlocProvider<FihiranaCubit>(
+            create: (context) => FihiranaCubit(fihiranaRepository),
+          ),
+          BlocProvider<FihiranaSearchCubit>(
+            create: (context) => FihiranaSearchCubit(fihiranaRepository),
           ),
         ],
         child: const MyApp(),
