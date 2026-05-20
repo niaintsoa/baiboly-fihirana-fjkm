@@ -43,7 +43,37 @@ class BibleDatabaseHelper {
       }
     }
 
-    final db = await openDatabase(path);
+    var db = await openDatabase(path);
+    
+    // Vérification de sécurité : si c'est la base de démo (qui contient moins de 66 livres),
+    // on force la copie de la vraie base de données depuis les assets.
+    try {
+      final booksCount = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM books')) ?? 0;
+      if (booksCount < 66) {
+        await db.close();
+        
+        // Copie forcée depuis les assets
+        await Directory(dirname(path)).create(recursive: true);
+        ByteData data = await rootBundle.load(join('assets/database', filePath));
+        List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+        await File(path).writeAsBytes(bytes, flush: true);
+        
+        db = await openDatabase(path);
+      }
+    } catch (_) {
+      // Si la table 'books' n'existe pas, on tente de forcer la copie également
+      try {
+        await db.close();
+        ByteData data = await rootBundle.load(join('assets/database', filePath));
+        List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+        await File(path).writeAsBytes(bytes, flush: true);
+        db = await openDatabase(path);
+      } catch (e) {
+        // En cas d'erreur de chargement de l'asset, on réouvre la DB actuelle
+        db = await openDatabase(path);
+      }
+    }
+
     await _createTablesIfNotExist(db);
     return db;
   }
