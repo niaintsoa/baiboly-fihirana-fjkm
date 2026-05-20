@@ -36,8 +36,11 @@ class BookmarkTile extends StatelessWidget {
         child: const Icon(Icons.delete, color: Colors.white, size: 20),
       ),
       onDismissed: (_) {
-        context.read<BookmarkCubit>().toggleBookmark(verse);
-        ScaffoldMessenger.of(context).showSnackBar(
+        final cubit = context.read<BookmarkCubit>();
+        final messenger = ScaffoldMessenger.of(context);
+        cubit.toggleBookmark(verse);
+        messenger.clearSnackBars();
+        messenger.showSnackBar(
           SnackBar(
             content: Text(
               "Voaesorina: ${bookmark.bookName} ${bookmark.chapter}:${bookmark.verse}",
@@ -45,7 +48,10 @@ class BookmarkTile extends StatelessWidget {
             ),
             action: SnackBarAction(
               label: "Haverina",
-              onPressed: () => context.read<BookmarkCubit>().toggleBookmark(verse),
+              onPressed: () {
+                cubit.toggleBookmark(verse);
+                messenger.clearSnackBars();
+              },
             ),
           ),
         );
@@ -76,7 +82,32 @@ class BookmarkTile extends StatelessWidget {
                         color: theme.colorScheme.primary,
                       ),
                     ),
-                    Icon(Icons.arrow_forward_ios, size: 10, color: theme.colorScheme.primary.withOpacity(0.5)),
+                    IconButton(
+                      constraints: const BoxConstraints(),
+                      padding: EdgeInsets.zero,
+                      icon: Icon(Icons.delete_outline, size: 16, color: Colors.red.shade800),
+                      onPressed: () {
+                        final cubit = context.read<BookmarkCubit>();
+                        final messenger = ScaffoldMessenger.of(context);
+                        cubit.toggleBookmark(verse);
+                        messenger.clearSnackBars();
+                        messenger.showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Noesorina: ${bookmark.bookName} ${bookmark.chapter}:${bookmark.verse}",
+                              style: const TextStyle(fontSize: 11),
+                            ),
+                            action: SnackBarAction(
+                              label: "Haverina",
+                              onPressed: () {
+                                cubit.toggleBookmark(verse);
+                                messenger.clearSnackBars();
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
                 const SizedBox(height: 4),

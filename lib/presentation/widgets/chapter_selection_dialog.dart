@@ -17,6 +17,7 @@ class ChapterSelectionDialog extends StatefulWidget {
 
 class _ChapterSelectionDialogState extends State<ChapterSelectionDialog> {
   int? _selectedChapter;
+  int? _startVerse;
   int _versesCount = 0;
   bool _isLoading = false;
 
@@ -24,6 +25,7 @@ class _ChapterSelectionDialogState extends State<ChapterSelectionDialog> {
     setState(() {
       _selectedChapter = chapter;
       _isLoading = true;
+      _startVerse = null;
     });
     try {
       final repo = context.read<BibleRepository>();
@@ -35,6 +37,20 @@ class _ChapterSelectionDialogState extends State<ChapterSelectionDialog> {
     } catch (_) {
       setState(() => _isLoading = false);
     }
+  }
+
+  void _submitSelection(int start, [int? end]) {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      NoAnimationPageRoute(
+        builder: (_) => ReaderScreen(
+          book: widget.book,
+          initialChapter: _selectedChapter!,
+          initialVerse: start,
+        ),
+      ),
+    ).then((_) => widget.onChapterSelected());
   }
 
   @override
@@ -55,20 +71,48 @@ class _ChapterSelectionDialogState extends State<ChapterSelectionDialog> {
                 if (!isChapterStep)
                   IconButton(
                     icon: const Icon(Icons.arrow_back, size: 18),
-                    onPressed: () => setState(() => _selectedChapter = null),
+                    onPressed: () {
+                      if (_startVerse != null) {
+                        setState(() => _startVerse = null);
+                      } else {
+                        setState(() => _selectedChapter = null);
+                      }
+                    },
                     constraints: const BoxConstraints(),
                     padding: EdgeInsets.zero,
                   ),
-                Text(
-                  isChapterStep ? "Safidio ny toko (${widget.book.name})" : "Safidio ny andininy (Toko $_selectedChapter)",
-                  style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 13),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      isChapterStep
+                          ? "Safidio ny toko (${widget.book.name})"
+                          : (_startVerse == null
+                              ? "Andininy hanombohana"
+                              : "Andininy hamaranana"),
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 13),
+                    ),
+                  ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.close, size: 18),
-                  onPressed: () => Navigator.pop(context),
-                  constraints: const BoxConstraints(),
-                  padding: EdgeInsets.zero,
-                ),
+                if (_startVerse != null)
+                  TextButton.icon(
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    onPressed: () => _submitSelection(_startVerse!),
+                    icon: const Icon(Icons.check, size: 16),
+                    label: const Text("OK", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                  )
+                else
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 18),
+                    onPressed: () => Navigator.pop(context),
+                    constraints: const BoxConstraints(),
+                    padding: EdgeInsets.zero,
+                  ),
               ],
             ),
           ),
@@ -84,31 +128,46 @@ class _ChapterSelectionDialogState extends State<ChapterSelectionDialog> {
                 itemCount: isChapterStep ? widget.book.totalChapters : _versesCount,
                 itemBuilder: (context, index) {
                   final number = index + 1;
+                  final isSelectedStart = !isChapterStep && _startVerse == number;
+                  final isSelectableEnd = !isChapterStep && _startVerse != null && number >= _startVerse!;
+
                   return InkWell(
                     onTap: () {
                       if (isChapterStep) {
                         _loadVerses(number);
                       } else {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          NoAnimationPageRoute(
-                            builder: (_) => ReaderScreen(book: widget.book, initialChapter: _selectedChapter!, initialVerse: number),
-                          ),
-                        ).then((_) => widget.onChapterSelected());
+                        if (_startVerse == null) {
+                          setState(() => _startVerse = number);
+                        } else {
+                          if (number >= _startVerse!) {
+                            _submitSelection(_startVerse!, number);
+                          } else {
+                            setState(() => _startVerse = number);
+                          }
+                        }
                       }
                     },
                     borderRadius: BorderRadius.circular(4),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primaryContainer.withOpacity(0.4),
+                        color: isSelectedStart
+                            ? theme.colorScheme.primary
+                            : (isSelectableEnd
+                                ? theme.colorScheme.primaryContainer.withOpacity(0.6)
+                                : theme.colorScheme.primaryContainer.withOpacity(0.2)),
                         borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: theme.colorScheme.primary.withOpacity(0.08)),
+                        border: Border.all(
+                          color: isSelectedStart ? theme.colorScheme.primary : theme.colorScheme.primary.withOpacity(0.08),
+                        ),
                       ),
                       child: Center(
                         child: Text(
                           "$number",
-                          style: theme.textTheme.titleMedium?.copyWith(fontSize: 13, fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: isSelectedStart ? theme.colorScheme.onPrimary : theme.colorScheme.primary,
+                          ),
                         ),
                       ),
                     ),
