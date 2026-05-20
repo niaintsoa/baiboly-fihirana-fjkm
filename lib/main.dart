@@ -61,7 +61,10 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Baiboly Malagasy',
           debugShowCheckedModeBanner: false,
-          theme: AppTheme.getTheme(state.themeMode),
+          theme: AppTheme.getTheme(
+            state.themeMode,
+            Color(state.primaryColorValue),
+          ),
           home: const HomeScreen(),
         );
       },
