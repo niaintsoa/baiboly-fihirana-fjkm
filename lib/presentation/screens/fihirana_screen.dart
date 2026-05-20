@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:baiboly_apk/presentation/cubits/fihirana_cubit.dart';
 import 'package:baiboly_apk/presentation/cubits/fihirana_search_cubit.dart';
 import 'package:baiboly_apk/presentation/widgets/hymn_list_view.dart';
+import 'package:baiboly_apk/presentation/widgets/theme_settings_sheet.dart';
 
 class FihiranaScreen extends StatefulWidget {
   const FihiranaScreen({super.key});
@@ -50,7 +51,25 @@ class _FihiranaScreenState extends State<FihiranaScreen> with SingleTickerProvid
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Fihirana sy Antema", style: theme.textTheme.titleLarge?.copyWith(fontSize: 16, fontWeight: FontWeight.bold)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Fihirana sy Antema", style: theme.textTheme.titleLarge?.copyWith(fontSize: 16, fontWeight: FontWeight.bold)),
+                  IconButton(
+                    constraints: const BoxConstraints(),
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        backgroundColor: theme.colorScheme.surface,
+                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(4))),
+                        builder: (_) => const ThemeSettingsSheet(),
+                      ).then((_) => setState(() {}));
+                    },
+                    icon: const Icon(Icons.settings_outlined, size: 20),
+                  ),
+                ],
+              ),
               const SizedBox(height: 8),
               _buildSearchBar(theme),
               const SizedBox(height: 8),

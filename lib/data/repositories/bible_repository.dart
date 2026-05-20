@@ -29,4 +29,8 @@ class BibleRepository {
   Future<void> toggleBookmark(VerseModel verse) async {
     await _dbHelper.toggleBookmark(verse);
   }
+
+  Future<VerseModel?> getRandomVerse() async {
+    return await _dbHelper.getRandomVerse();
+  }
 }

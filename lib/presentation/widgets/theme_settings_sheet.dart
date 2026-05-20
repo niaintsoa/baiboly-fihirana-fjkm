@@ -14,14 +14,8 @@ class ThemeSettingsSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            "Loko fototra sy ambadika",
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
-            ),
-          ),
-          const SizedBox(height: 12),
+          Text("Loko fototra sy ambadika", style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 13)),
+          const SizedBox(height: 8),
           const ColorPickerWidget(),
           const SizedBox(height: 12),
           BlocBuilder<PreferencesCubit, PreferencesState>(
@@ -36,23 +30,44 @@ class ThemeSettingsSheet extends StatelessWidget {
               );
             },
           ),
+          const SizedBox(height: 12),
+          Text("Haben'ny soratra (Polisy)", style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 13)),
+          const SizedBox(height: 8),
+          BlocBuilder<PreferencesCubit, PreferencesState>(
+            builder: (context, prefs) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: prefs.fontSize > 12 ? () => context.read<PreferencesCubit>().decreaseFontSize() : null,
+                    icon: const Icon(Icons.remove, size: 16),
+                    constraints: const BoxConstraints(),
+                    padding: const EdgeInsets.all(6),
+                  ),
+                  const SizedBox(width: 16),
+                  Text("${prefs.fontSize.toInt()}", style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 14)),
+                  const SizedBox(width: 16),
+                  IconButton(
+                    onPressed: prefs.fontSize < 30 ? () => context.read<PreferencesCubit>().increaseFontSize() : null,
+                    icon: const Icon(Icons.add, size: 16),
+                    constraints: const BoxConstraints(),
+                    padding: const EdgeInsets.all(6),
+                  ),
+                ],
+              );
+            },
+          ),
           const SizedBox(height: 8),
         ],
       ),
     );
   }
 
-  Widget _buildThemeOption(
-    BuildContext context,
-    String themeValue,
-    String label,
-    Color bg,
-    Color text,
-    String currentTheme,
-  ) {
-    final isSelected = currentTheme == themeValue;
+  Widget _buildThemeOption(BuildContext context, String val, String lbl, Color bg, Color txt, String curr) {
+    final isSel = curr == val;
+    final theme = Theme.of(context);
     return InkWell(
-      onTap: () => context.read<PreferencesCubit>().setThemeMode(themeValue),
+      onTap: () => context.read<PreferencesCubit>().setThemeMode(val),
       borderRadius: BorderRadius.circular(4),
       child: Container(
         width: 85,
@@ -60,16 +75,13 @@ class ThemeSettingsSheet extends StatelessWidget {
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(4),
-          border: Border.all(
-            color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey.withOpacity(0.3),
-            width: isSelected ? 1.5 : 1,
-          ),
+          border: Border.all(color: isSel ? theme.colorScheme.primary : Colors.grey.withOpacity(0.3), width: isSel ? 1.5 : 1),
         ),
         child: Column(
           children: [
-            Text("Aa", style: TextStyle(color: text, fontSize: 14, fontWeight: FontWeight.bold)),
+            Text("Aa", style: TextStyle(color: txt, fontSize: 14, fontWeight: FontWeight.bold)),
             const SizedBox(height: 2),
-            Text(label, style: TextStyle(color: text.withOpacity(0.8), fontSize: 10, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+            Text(lbl, style: TextStyle(color: txt.withOpacity(0.8), fontSize: 10, fontWeight: isSel ? FontWeight.bold : FontWeight.normal)),
           ],
         ),
       ),

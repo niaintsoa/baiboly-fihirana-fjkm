@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:baiboly_apk/data/models/hymn_model.dart';
 import 'package:baiboly_apk/presentation/cubits/hymn_detail_cubit.dart';
-import 'package:baiboly_apk/presentation/cubits/preferences_cubit.dart';
 import 'package:baiboly_apk/presentation/widgets/hymn_verse_tile.dart';
 
 class HymnReaderScreen extends StatefulWidget {
@@ -51,26 +50,21 @@ class _HymnReaderScreenState extends State<HymnReaderScreen> {
             final verses = state.verses;
             if (verses.isEmpty) return const Center(child: Text("Tsy misy paroles hita.", style: TextStyle(fontSize: 11)));
 
-            return BlocBuilder<PreferencesCubit, PreferencesState>(
-              builder: (context, prefs) {
-                final double baseFontSize = prefs.fontSize > 18 ? 15.0 : prefs.fontSize - 1.0;
-                return ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                  children: [
-                    if (widget.hymn.title.isNotEmpty) ...[
-                      Center(child: Text(widget.hymn.title.toUpperCase(), textAlign: TextAlign.center, style: theme.textTheme.titleMedium?.copyWith(fontSize: baseFontSize + 1, fontWeight: FontWeight.bold, color: theme.colorScheme.primary))),
-                      const SizedBox(height: 4),
-                    ],
-                    if (widget.hymn.author.isNotEmpty) ...[
-                      Center(child: Text(widget.hymn.author, style: theme.textTheme.bodyMedium?.copyWith(fontSize: baseFontSize - 3, fontStyle: FontStyle.italic, color: theme.colorScheme.onSurface.withOpacity(0.6)))),
-                    ],
-                    const SizedBox(height: 16),
-                    const Divider(height: 1, thickness: 0.5),
-                    const SizedBox(height: 16),
-                    ...verses.map((verse) => HymnVerseTile(verse: verse, baseFontSize: baseFontSize)),
-                  ],
-                );
-              },
+            return ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              children: [
+                if (widget.hymn.title.isNotEmpty) ...[
+                  Center(child: Text(widget.hymn.title.toUpperCase(), textAlign: TextAlign.center, style: theme.textTheme.titleMedium?.copyWith(fontSize: 16, fontWeight: FontWeight.bold, color: theme.colorScheme.primary))),
+                  const SizedBox(height: 4),
+                ],
+                if (widget.hymn.author.isNotEmpty) ...[
+                  Center(child: Text(widget.hymn.author, style: theme.textTheme.bodyMedium?.copyWith(fontSize: 12, fontStyle: FontStyle.italic, color: theme.colorScheme.onSurface.withOpacity(0.6)))),
+                ],
+                const SizedBox(height: 16),
+                const Divider(height: 1, thickness: 0.5),
+                const SizedBox(height: 16),
+                ...verses.map((verse) => HymnVerseTile(verse: verse, baseFontSize: 15.0)),
+              ],
             );
           }
           if (state is HymnDetailError) return Center(child: Text(state.message, style: const TextStyle(fontSize: 11)));

@@ -1,42 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:baiboly_apk/data/models/verse_model.dart';
-import 'package:baiboly_apk/presentation/cubits/preferences_cubit.dart';
 import 'package:baiboly_apk/presentation/widgets/verse_tile.dart';
 
-class VerseListView extends StatelessWidget {
+class VerseListView extends StatefulWidget {
   final List<VerseModel> verses;
+  final int? initialVerse;
 
-  const VerseListView({super.key, required this.verses});
+  const VerseListView({super.key, required this.verses, this.initialVerse});
+
+  @override
+  State<VerseListView> createState() => _VerseListViewState();
+}
+
+class _VerseListViewState extends State<VerseListView> {
+  final Map<int, GlobalKey> _keys = {};
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialVerse != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollToVerse();
+      });
+    }
+  }
+
+  void _scrollToVerse() {
+    final key = _keys[widget.initialVerse];
+    if (key != null && key.currentContext != null) {
+      Scrollable.ensureVisible(
+        key.currentContext!,
+        duration: const Duration(milliseconds: 1),
+        curve: Curves.linear,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (verses.isEmpty) {
+    if (widget.verses.isEmpty) {
       return const Center(
         child: Padding(
           padding: EdgeInsets.all(12.0),
-          child: Text(
-            "Tsy misy andininy ato amin'ity toko ity.",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 12),
-          ),
+          child: Text("Tsy misy andininy ato amin'ity toko ity.", textAlign: TextAlign.center, style: TextStyle(fontSize: 12)),
         ),
       );
     }
 
-    return BlocBuilder<PreferencesCubit, PreferencesState>(
-      builder: (context, prefs) {
-        final double baseFontSize = prefs.fontSize > 18 ? 15.0 : prefs.fontSize - 2.0;
-
-        return ListView.builder(
-          padding: const EdgeInsets.fromLTRB(12, 6, 12, 50),
-          itemCount: verses.length,
-          itemBuilder: (context, index) {
-            return VerseTile(
-              verse: verses[index],
-              baseFontSize: baseFontSize,
-            );
-          },
+    return ListView.builder(
+      padding: const EdgeInsets.fromLTRB(12, 6, 12, 50),
+      itemCount: widget.verses.length,
+      itemBuilder: (context, index) {
+        final verse = widget.verses[index];
+        final key = _keys.putIfAbsent(verse.verse, () => GlobalKey());
+        return VerseTile(
+          key: key,
+          verse: verse,
+          baseFontSize: 15.0,
         );
       },
     );

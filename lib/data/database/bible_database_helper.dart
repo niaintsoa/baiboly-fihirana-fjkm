@@ -301,4 +301,17 @@ class BibleDatabaseHelper {
       });
     }
   }
+
+  Future<VerseModel?> getRandomVerse() async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> result = await db.rawQuery('''
+      SELECT v.*, b.name as book_name 
+      FROM verses v
+      LEFT JOIN books b ON v.book_number = b.number
+      ORDER BY RANDOM()
+      LIMIT 1
+    ''');
+    if (result.isEmpty) return null;
+    return VerseModel.fromMap(result.first);
+  }
 }

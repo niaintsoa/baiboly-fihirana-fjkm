@@ -25,9 +25,33 @@ class BibleHomeHeader extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "Baiboly Malagasy",
-                style: theme.textTheme.titleLarge?.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFC62828), // Rouge
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    child: const Text(
+                      "Baiboly",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    "FFPM",
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
               Row(
                 children: [
@@ -35,7 +59,7 @@ class BibleHomeHeader extends StatelessWidget {
                     constraints: const BoxConstraints(),
                     padding: const EdgeInsets.only(right: 12),
                     onPressed: () => _showThemeSettings(context),
-                    icon: const Icon(Icons.palette_outlined, size: 20),
+                    icon: const Icon(Icons.settings_outlined, size: 20),
                   ),
                   IconButton(
                     constraints: const BoxConstraints(),

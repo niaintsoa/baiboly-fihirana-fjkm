@@ -67,12 +67,21 @@ class MyApp extends StatelessWidget {
     return BlocBuilder<PreferencesCubit, PreferencesState>(
       builder: (context, state) {
         return MaterialApp(
-          title: 'Baiboly Malagasy',
+          title: 'Baiboly FFPM',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.getTheme(
             state.themeMode,
             Color(state.primaryColorValue),
           ),
+          builder: (context, child) {
+            final scale = state.fontSize / 18.0;
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaler: TextScaler.linear(scale),
+              ),
+              child: child!,
+            );
+          },
           home: const HomeScreen(),
         );
       },

@@ -4,13 +4,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:baiboly_apk/data/models/book_model.dart';
 import 'package:baiboly_apk/presentation/cubits/bible_reader_cubit.dart';
 import 'package:baiboly_apk/presentation/widgets/verse_list_view.dart';
-import 'package:baiboly_apk/presentation/widgets/reader_settings_sheet.dart';
+import 'package:baiboly_apk/presentation/widgets/theme_settings_sheet.dart';
 
 class ReaderScreen extends StatefulWidget {
   final BookModel book;
   final int initialChapter;
+  final int? initialVerse;
 
-  const ReaderScreen({super.key, required this.book, required this.initialChapter});
+  const ReaderScreen({super.key, required this.book, required this.initialChapter, this.initialVerse});
 
   @override
   State<ReaderScreen> createState() => _ReaderScreenState();
@@ -77,7 +78,10 @@ class _ReaderScreenState extends State<ReaderScreen> {
             builder: (context, state) {
               if (state is BibleReaderLoading) return const Center(child: CircularProgressIndicator());
               if (state is BibleReaderLoaded && state.currentChapter == chIdx) {
-                return VerseListView(verses: state.verses);
+                return VerseListView(
+                  verses: state.verses,
+                  initialVerse: chIdx == widget.initialChapter ? widget.initialVerse : null,
+                );
               }
               if (state is BibleReaderError) return Center(child: Text(state.message, style: const TextStyle(fontSize: 12)));
               return const SizedBox.shrink();
@@ -115,7 +119,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
       context: context,
       backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(4))),
-      builder: (_) => const ReaderSettingsSheet(),
+      builder: (_) => const ThemeSettingsSheet(),
     );
   }
 }
