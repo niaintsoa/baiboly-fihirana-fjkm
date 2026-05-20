@@ -33,8 +33,20 @@ class _VerseListViewState extends State<VerseListView> {
   }
 
   void _scrollToVerse() {
-    final key = _keys[widget.initialVerse];
-    if (key?.currentContext != null) Scrollable.ensureVisible(key!.currentContext!, duration: const Duration(milliseconds: 1));
+    if (!_scrollController.hasClients || widget.initialVerse == null) return;
+    final estimate = (widget.initialVerse! - 1) * 65.0;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    _scrollController.jumpTo(estimate.clamp(0.0, maxScroll));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final key = _keys[widget.initialVerse];
+      if (key?.currentContext != null) {
+        Scrollable.ensureVisible(
+          key!.currentContext!,
+          duration: const Duration(milliseconds: 1),
+          curve: Curves.linear,
+        );
+      }
+    });
   }
 
   void _clearHighlight() {
@@ -51,27 +63,36 @@ class _VerseListViewState extends State<VerseListView> {
     if (widget.verses.isEmpty) {
       return const Center(child: Text("Tsy misy andininy.", style: TextStyle(fontSize: 12)));
     }
-    return Scrollbar(
-      controller: _scrollController,
-      thumbVisibility: true,
-      interactive: true,
-      thickness: 10.0, // Agrandie à 10.0 pour une sélection et un défilement tactile faciles
-      radius: const Radius.circular(5),
-      child: ListView.builder(
+    return ScrollbarTheme(
+      data: ScrollbarThemeData(
+        thickness: WidgetStateProperty.resolveWith<double?>((states) {
+          if (states.contains(WidgetState.dragged) || states.contains(WidgetState.hovered)) {
+            return 12.0;
+          }
+          return 5.0;
+        }),
+      ),
+      child: Scrollbar(
         controller: _scrollController,
-        padding: const EdgeInsets.fromLTRB(12, 6, 12, 50),
-        itemCount: widget.verses.length,
-        itemBuilder: (context, index) {
-          final verse = widget.verses[index];
-          final key = _keys.putIfAbsent(verse.verse, () => GlobalKey());
-          return VerseTile(
-            key: key,
-            verse: verse,
-            baseFontSize: 15.0,
-            isHighlighted: _shouldHighlight(verse.verse),
-            onTap: _clearHighlight,
-          );
-        },
+        thumbVisibility: true,
+        interactive: true,
+        radius: const Radius.circular(5),
+        child: ListView.builder(
+          controller: _scrollController,
+          padding: const EdgeInsets.fromLTRB(12, 6, 12, 50),
+          itemCount: widget.verses.length,
+          itemBuilder: (context, index) {
+            final verse = widget.verses[index];
+            final key = _keys.putIfAbsent(verse.verse, () => GlobalKey());
+            return VerseTile(
+              key: key,
+              verse: verse,
+              baseFontSize: 15.0,
+              isHighlighted: _shouldHighlight(verse.verse),
+              onTap: _clearHighlight,
+            );
+          },
+        ),
       ),
     );
   }
