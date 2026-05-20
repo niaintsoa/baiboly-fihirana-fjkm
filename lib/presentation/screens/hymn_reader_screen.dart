@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:baiboly_apk/data/models/hymn_model.dart';
-import 'package:baiboly_apk/presentation/cubits/fihirana_cubit.dart';
+import 'package:baiboly_apk/presentation/cubits/hymn_detail_cubit.dart';
 import 'package:baiboly_apk/presentation/cubits/preferences_cubit.dart';
 import 'package:baiboly_apk/presentation/widgets/hymn_verse_tile.dart';
 
@@ -18,7 +18,7 @@ class _HymnReaderScreenState extends State<HymnReaderScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<FihiranaCubit>().loadHymnDetails(widget.hymn);
+    context.read<HymnDetailCubit>().loadHymnDetails(widget.hymn);
   }
 
   @override
@@ -33,21 +33,21 @@ class _HymnReaderScreenState extends State<HymnReaderScreen> {
         leading: IconButton(icon: const Icon(Icons.arrow_back, size: 20), onPressed: () => Navigator.pop(context)),
         title: Text("$categoryName - Hira ${widget.hymn.number}", style: theme.textTheme.titleMedium?.copyWith(fontSize: 14, fontWeight: FontWeight.bold)),
         actions: [
-          BlocBuilder<FihiranaCubit, FihiranaState>(
+          BlocBuilder<HymnDetailCubit, HymnDetailState>(
             builder: (context, state) {
-              bool isBookmarked = state is HymnLoaded && state.isBookmarked;
+              bool isBookmarked = state is HymnDetailLoaded && state.isBookmarked;
               return IconButton(
                 icon: Icon(isBookmarked ? Icons.bookmark : Icons.bookmark_outline, size: 20, color: isBookmarked ? theme.colorScheme.primary : null),
-                onPressed: () => context.read<FihiranaCubit>().toggleHymnBookmark(widget.hymn.id),
+                onPressed: () => context.read<HymnDetailCubit>().toggleHymnBookmark(widget.hymn.id),
               );
             },
           ),
         ],
       ),
-      body: BlocBuilder<FihiranaCubit, FihiranaState>(
+      body: BlocBuilder<HymnDetailCubit, HymnDetailState>(
         builder: (context, state) {
-          if (state is FihiranaLoading) return const Center(child: CircularProgressIndicator());
-          if (state is HymnLoaded) {
+          if (state is HymnDetailLoading) return const Center(child: CircularProgressIndicator());
+          if (state is HymnDetailLoaded) {
             final verses = state.verses;
             if (verses.isEmpty) return const Center(child: Text("Tsy misy paroles hita.", style: TextStyle(fontSize: 11)));
 
@@ -73,7 +73,7 @@ class _HymnReaderScreenState extends State<HymnReaderScreen> {
               },
             );
           }
-          if (state is FihiranaError) return Center(child: Text(state.message, style: const TextStyle(fontSize: 11)));
+          if (state is HymnDetailError) return Center(child: Text(state.message, style: const TextStyle(fontSize: 11)));
           return const SizedBox.shrink();
         },
       ),

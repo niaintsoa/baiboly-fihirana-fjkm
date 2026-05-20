@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:baiboly_apk/data/models/book_model.dart';
-import 'package:baiboly_apk/presentation/cubits/bible_cubit.dart';
+import 'package:baiboly_apk/presentation/cubits/bible_reader_cubit.dart';
 import 'package:baiboly_apk/presentation/widgets/verse_list_view.dart';
 import 'package:baiboly_apk/presentation/widgets/reader_settings_sheet.dart';
 
@@ -10,11 +10,7 @@ class ReaderScreen extends StatefulWidget {
   final BookModel book;
   final int initialChapter;
 
-  const ReaderScreen({
-    super.key,
-    required this.book,
-    required this.initialChapter,
-  });
+  const ReaderScreen({super.key, required this.book, required this.initialChapter});
 
   @override
   State<ReaderScreen> createState() => _ReaderScreenState();
@@ -39,7 +35,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
   }
 
   void _loadChapterData(int chapter) {
-    context.read<BibleCubit>().loadChapter(widget.book, chapter);
+    context.read<BibleReaderCubit>().loadChapter(widget.book, chapter);
     _saveLastRead(chapter);
   }
 
@@ -52,29 +48,20 @@ class _ReaderScreenState extends State<ReaderScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
         leadingWidth: 40,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, size: 20),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: BlocBuilder<BibleCubit, BibleState>(
+        leading: IconButton(icon: const Icon(Icons.arrow_back, size: 20), onPressed: () => Navigator.pop(context)),
+        title: BlocBuilder<BibleReaderCubit, BibleReaderState>(
           builder: (context, state) {
             String title = widget.book.name;
-            if (state is BibleChapterLoaded) {
-              title = "${state.currentBook.name} $_currentChapter";
-            }
+            if (state is BibleReaderLoaded) title = "${state.currentBook.name} $_currentChapter";
             return Text(title, style: theme.textTheme.titleMedium?.copyWith(fontSize: 14, fontWeight: FontWeight.bold));
           },
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.text_fields, size: 20),
-            onPressed: () => _showSettings(),
-          ),
+          IconButton(icon: const Icon(Icons.text_fields, size: 20), onPressed: () => _showSettings()),
         ],
       ),
       body: PageView.builder(
@@ -86,13 +73,13 @@ class _ReaderScreenState extends State<ReaderScreen> {
         },
         itemBuilder: (context, idx) {
           final chIdx = idx + 1;
-          return BlocBuilder<BibleCubit, BibleState>(
+          return BlocBuilder<BibleReaderCubit, BibleReaderState>(
             builder: (context, state) {
-              if (state is BibleLoading) return const Center(child: CircularProgressIndicator());
-              if (state is BibleChapterLoaded && state.currentChapter == chIdx) {
+              if (state is BibleReaderLoading) return const Center(child: CircularProgressIndicator());
+              if (state is BibleReaderLoaded && state.currentChapter == chIdx) {
                 return VerseListView(verses: state.verses);
               }
-              if (state is BibleError) return Center(child: Text(state.message, style: const TextStyle(fontSize: 12)));
+              if (state is BibleReaderError) return Center(child: Text(state.message, style: const TextStyle(fontSize: 12)));
               return const SizedBox.shrink();
             },
           );

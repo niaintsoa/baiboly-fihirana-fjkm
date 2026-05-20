@@ -116,7 +116,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   void _navigateToReader(VerseModel verse) {
     final bibleState = context.read<BibleCubit>().state;
-    List<BookModel> books = bibleState is BibleBooksLoaded ? bibleState.books : (bibleState is BibleChapterLoaded ? bibleState.books : []);
+    List<BookModel> books = bibleState is BibleBooksLoaded ? bibleState.books : [];
     if (books.isNotEmpty) {
       try {
         final book = books.firstWhere((b) => b.number == verse.bookNumber);

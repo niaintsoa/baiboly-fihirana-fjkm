@@ -4,10 +4,12 @@ import 'package:baiboly_apk/data/repositories/bible_repository.dart';
 import 'package:baiboly_apk/data/repositories/fihirana_repository.dart';
 import 'package:baiboly_apk/presentation/cubits/preferences_cubit.dart';
 import 'package:baiboly_apk/presentation/cubits/bible_cubit.dart';
+import 'package:baiboly_apk/presentation/cubits/bible_reader_cubit.dart';
 import 'package:baiboly_apk/presentation/cubits/search_cubit.dart';
 import 'package:baiboly_apk/presentation/cubits/bookmark_cubit.dart';
 import 'package:baiboly_apk/presentation/cubits/fihirana_cubit.dart';
 import 'package:baiboly_apk/presentation/cubits/fihirana_search_cubit.dart';
+import 'package:baiboly_apk/presentation/cubits/hymn_detail_cubit.dart';
 import 'package:baiboly_apk/presentation/theme/app_theme.dart';
 import 'package:baiboly_apk/presentation/screens/home_screen.dart';
 
@@ -32,6 +34,9 @@ void main() {
           BlocProvider<BibleCubit>(
             create: (context) => BibleCubit(bibleRepository),
           ),
+          BlocProvider<BibleReaderCubit>(
+            create: (context) => BibleReaderCubit(bibleRepository),
+          ),
           BlocProvider<SearchCubit>(
             create: (context) => SearchCubit(bibleRepository),
           ),
@@ -43,6 +48,9 @@ void main() {
           ),
           BlocProvider<FihiranaSearchCubit>(
             create: (context) => FihiranaSearchCubit(fihiranaRepository),
+          ),
+          BlocProvider<HymnDetailCubit>(
+            create: (context) => HymnDetailCubit(fihiranaRepository),
           ),
         ],
         child: const MyApp(),
