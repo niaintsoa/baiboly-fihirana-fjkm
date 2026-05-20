@@ -91,7 +91,16 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
     if (books.isNotEmpty) {
       try {
         final book = books.firstWhere((b) => b.number == verse.bookNumber);
-        Navigator.push(context, NoAnimationPageRoute(builder: (_) => ReaderScreen(book: book, initialChapter: verse.chapter))).then((_) {
+        Navigator.push(
+          context,
+          NoAnimationPageRoute(
+            builder: (_) => ReaderScreen(
+              book: book,
+              initialChapter: verse.chapter,
+              initialVerse: verse.verse,
+            ),
+          ),
+        ).then((_) {
           if (!mounted) return;
           context.read<BookmarkCubit>().loadBookmarks();
         });

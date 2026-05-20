@@ -48,6 +48,7 @@ class _ChapterSelectionDialogState extends State<ChapterSelectionDialog> {
           book: widget.book,
           initialChapter: _selectedChapter!,
           initialVerse: start,
+          initialEndVerse: end,
         ),
       ),
     ).then((_) => widget.onChapterSelected());

@@ -8,11 +8,15 @@ import 'package:baiboly_apk/presentation/widgets/verse_actions_sheet.dart';
 class VerseTile extends StatelessWidget {
   final VerseModel verse;
   final double baseFontSize;
+  final bool isHighlighted;
+  final VoidCallback? onTap;
 
   const VerseTile({
     super.key,
     required this.verse,
     required this.baseFontSize,
+    this.isHighlighted = false,
+    this.onTap,
   });
 
   @override
@@ -20,49 +24,86 @@ class VerseTile extends StatelessWidget {
     final theme = Theme.of(context);
     final cleanedText = TextCleaner.cleanVerseText(verse.text, verse.verse);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3.0),
-      child: InkWell(
-        onLongPress: () => _showActions(context),
-        onDoubleTap: () {
-          context.read<BookmarkCubit>().toggleBookmark(verse);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                "Voaova ny andininy tianao (${verse.bookName} ${verse.chapter}:${verse.verse})",
-                style: const TextStyle(color: Colors.white, fontSize: 11),
+    return BlocBuilder<BookmarkCubit, BookmarkState>(
+      builder: (context, bookmarkState) {
+        bool isBookmarked = false;
+        if (bookmarkState is BookmarkLoaded) {
+          isBookmarked = bookmarkState.bookmarks.any((b) =>
+              b.bookNumber == verse.bookNumber &&
+              b.chapter == verse.chapter &&
+              b.verse == verse.verse);
+        }
+
+        Color highlightColor = Colors.transparent;
+        if (isHighlighted) {
+          highlightColor = theme.colorScheme.primary.withOpacity(0.12);
+        } else if (isBookmarked) {
+          highlightColor = theme.colorScheme.primary.withOpacity(0.06);
+        }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 3.0),
+          child: InkWell(
+            onTap: onTap,
+            onLongPress: () => _showActions(context),
+            onDoubleTap: () {
+              context.read<BookmarkCubit>().toggleBookmark(verse);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    "Voaova ny andininy tianao (${verse.bookName} ${verse.chapter}:${verse.verse})",
+                    style: const TextStyle(color: Colors.white, fontSize: 11),
+                  ),
+                  duration: const Duration(seconds: 1),
+                  backgroundColor: theme.colorScheme.primary,
+                ),
+              );
+            },
+            borderRadius: BorderRadius.circular(4),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOut,
+              padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
+              decoration: BoxDecoration(
+                color: highlightColor,
+                borderRadius: BorderRadius.circular(4),
+                border: isBookmarked
+                    ? Border(
+                        left: BorderSide(
+                          color: theme.colorScheme.primary.withOpacity(0.6),
+                          width: 2.5,
+                        ),
+                      )
+                    : null,
               ),
-              duration: const Duration(seconds: 1),
-              backgroundColor: theme.colorScheme.primary,
-            ),
-          );
-        },
-        borderRadius: BorderRadius.circular(4),
-        child: Padding(
-          padding: const EdgeInsets.all(2.0),
-          child: Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: "${verse.verse} ",
-                  style: TextStyle(
-                    fontSize: baseFontSize - 3,
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.primary,
+              child: Padding(
+                padding: EdgeInsets.only(left: isBookmarked ? 4.0 : 0.0),
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "${verse.verse} ",
+                        style: TextStyle(
+                          fontSize: baseFontSize - 3,
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      TextSpan(
+                        text: cleanedText,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontSize: baseFontSize,
+                          height: 1.3,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                TextSpan(
-                  text: cleanedText,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontSize: baseFontSize,
-                    height: 1.3,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

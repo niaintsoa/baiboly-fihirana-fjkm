@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:baiboly_apk/data/models/book_model.dart';
 import 'package:baiboly_apk/presentation/cubits/bible_reader_cubit.dart';
+import 'package:baiboly_apk/presentation/cubits/bookmark_cubit.dart';
 import 'package:baiboly_apk/presentation/widgets/verse_list_view.dart';
 import 'package:baiboly_apk/presentation/widgets/theme_settings_sheet.dart';
 
@@ -10,8 +11,15 @@ class ReaderScreen extends StatefulWidget {
   final BookModel book;
   final int initialChapter;
   final int? initialVerse;
+  final int? initialEndVerse;
 
-  const ReaderScreen({super.key, required this.book, required this.initialChapter, this.initialVerse});
+  const ReaderScreen({
+    super.key,
+    required this.book,
+    required this.initialChapter,
+    this.initialVerse,
+    this.initialEndVerse,
+  });
 
   @override
   State<ReaderScreen> createState() => _ReaderScreenState();
@@ -27,6 +35,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
     _currentChapter = widget.initialChapter;
     _pageController = PageController(initialPage: _currentChapter - 1);
     _loadChapterData(_currentChapter);
+    context.read<BookmarkCubit>().loadBookmarks();
   }
 
   @override
@@ -81,6 +90,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 return VerseListView(
                   verses: state.verses,
                   initialVerse: chIdx == widget.initialChapter ? widget.initialVerse : null,
+                  initialEndVerse: chIdx == widget.initialChapter ? widget.initialEndVerse : null,
                 );
               }
               if (state is BibleReaderError) return Center(child: Text(state.message, style: const TextStyle(fontSize: 12)));

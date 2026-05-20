@@ -120,7 +120,16 @@ class _SearchScreenState extends State<SearchScreen> {
     if (books.isNotEmpty) {
       try {
         final book = books.firstWhere((b) => b.number == verse.bookNumber);
-        Navigator.push(context, NoAnimationPageRoute(builder: (_) => ReaderScreen(book: book, initialChapter: verse.chapter)));
+        Navigator.push(
+          context,
+          NoAnimationPageRoute(
+            builder: (_) => ReaderScreen(
+              book: book,
+              initialChapter: verse.chapter,
+              initialVerse: verse.verse,
+            ),
+          ),
+        );
       } catch (_) {}
     }
   }
