@@ -39,6 +39,12 @@ class _SearchScreenState extends State<SearchScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        titleSpacing: 0,
+        leadingWidth: 40,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, size: 20),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: TextField(
           controller: _searchController,
           focusNode: _focusNode,
@@ -50,13 +56,14 @@ class _SearchScreenState extends State<SearchScreen> {
             context.read<SearchCubit>().search(query);
           },
           style: theme.textTheme.titleMedium?.copyWith(
+            fontSize: 13,
             fontWeight: FontWeight.normal,
           ),
         ),
         actions: [
           if (_searchController.text.isNotEmpty)
             IconButton(
-              icon: const Icon(Icons.clear),
+              icon: const Icon(Icons.clear, size: 20),
               onPressed: () {
                 _searchController.clear();
                 context.read<SearchCubit>().clearSearch();
@@ -71,31 +78,31 @@ class _SearchScreenState extends State<SearchScreen> {
               child: CircularProgressIndicator(),
             );
           }
-
+ 
           if (state is SearchSuccess) {
             final results = state.results;
             if (results.isEmpty) {
               return Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(24.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.search_off, size: 64, color: theme.colorScheme.primary.withOpacity(0.5)),
-                      const SizedBox(height: 16),
+                      Icon(Icons.search_off, size: 36, color: theme.colorScheme.primary.withOpacity(0.5)),
+                      const SizedBox(height: 8),
                       Text(
                         "Tsy nisy andininy mifanaraka amin'ny '${state.query}'",
                         textAlign: TextAlign.center,
-                        style: theme.textTheme.bodyMedium?.copyWith(fontSize: 16),
+                        style: theme.textTheme.bodyMedium?.copyWith(fontSize: 12),
                       ),
                     ],
                   ),
                 ),
               );
             }
-
+ 
             return ListView.builder(
-              padding: const EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: 4),
               itemCount: results.length,
               itemBuilder: (context, index) {
                 final verse = results[index];
@@ -103,44 +110,44 @@ class _SearchScreenState extends State<SearchScreen> {
               },
             );
           }
-
+ 
           if (state is SearchError) {
             return Center(
               child: Text(
                 state.message,
-                style: const TextStyle(color: Colors.red),
+                style: const TextStyle(color: Colors.red, fontSize: 12),
               ),
             );
           }
-
+ 
           // SearchInitial
           return Center(
             child: Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
                     Icons.search,
-                    size: 80,
+                    size: 40,
                     color: theme.colorScheme.primary.withOpacity(0.15),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
                   Text(
                     "Soraty eo ambony ny teny tadiavinao",
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurface.withOpacity(0.6),
-                      fontSize: 15,
+                      fontSize: 12,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
                   Text(
                     "Ohatra: 'Fitiavana', 'Fahavelomana'",
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurface.withOpacity(0.4),
-                      fontSize: 13,
+                      fontSize: 10,
                     ),
                   ),
                 ],
@@ -196,47 +203,45 @@ class _SearchScreenState extends State<SearchScreen> {
     }
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: theme.colorScheme.primary.withOpacity(0.08)),
+        borderRadius: BorderRadius.circular(4),
+        side: BorderSide(color: theme.colorScheme.primary.withOpacity(0.06)),
       ),
-      color: theme.colorScheme.primaryContainer.withOpacity(0.15),
+      color: theme.colorScheme.primaryContainer.withOpacity(0.1),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(4),
         onTap: () => _navigateToReader(verse),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Référence du verset
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     "${verse.bookName} ${verse.chapter}:${verse.verse}",
                     style: theme.textTheme.titleMedium?.copyWith(
-                      fontSize: 14,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.primary,
                     ),
                   ),
                   Icon(
                     Icons.arrow_forward_ios,
-                    size: 12,
+                    size: 10,
                     color: theme.colorScheme.primary.withOpacity(0.5),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
-              // Texte du verset
+              const SizedBox(height: 4),
               Text.rich(
                 TextSpan(children: spans),
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  fontSize: 14,
-                  height: 1.4,
+                  fontSize: 12,
+                  height: 1.3,
                   color: theme.colorScheme.onSurface.withOpacity(0.8),
                 ),
               ),

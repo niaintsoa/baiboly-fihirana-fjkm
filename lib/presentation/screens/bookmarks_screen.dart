@@ -27,7 +27,16 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Andininy Tianao"),
+        titleSpacing: 0,
+        leadingWidth: 40,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, size: 20),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          "Andininy Tianao",
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+        ),
       ),
       body: BlocBuilder<BookmarkCubit, BookmarkState>(
         builder: (context, state) {
@@ -36,37 +45,37 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
               child: CircularProgressIndicator(),
             );
           }
-
+ 
           if (state is BookmarkLoaded) {
             final bookmarks = state.bookmarks;
             if (bookmarks.isEmpty) {
               return Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(24.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
                         Icons.bookmark_border,
-                        size: 80,
+                        size: 40,
                         color: theme.colorScheme.primary.withOpacity(0.15),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 8),
                       Text(
                         "Tsy misy andininy tiana voatahiry",
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onSurface.withOpacity(0.6),
-                          fontSize: 15,
+                          fontSize: 12,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 4),
                       Text(
                         "Tsindrio indroa mialoha ny andininy iray rehefa mamaky ianao mba hitahirizana azy eto.",
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onSurface.withOpacity(0.4),
-                          fontSize: 13,
+                          fontSize: 10,
                         ),
                       ),
                     ],
@@ -74,14 +83,13 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                 ),
               );
             }
-
+ 
             return ListView.builder(
-              padding: const EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: 4),
               itemCount: bookmarks.length,
               itemBuilder: (context, index) {
                 final bookmark = bookmarks[index];
                 
-                // Conversion en VerseModel pour pouvoir manipuler les fonctions existantes
                 final verse = VerseModel(
                   id: bookmark.id,
                   bookNumber: bookmark.bookNumber,
@@ -90,22 +98,24 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                   verse: bookmark.verse,
                   text: bookmark.text,
                 );
-
-                // Swipe-to-dismiss premium pour supprimer des favoris
+ 
                 return Dismissible(
                   key: Key('bookmark_${bookmark.id}'),
                   direction: DismissDirection.endToStart,
                   background: Container(
                     alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     color: Colors.red.shade800,
-                    child: const Icon(Icons.delete, color: Colors.white),
+                    child: const Icon(Icons.delete, color: Colors.white, size: 20),
                   ),
                   onDismissed: (direction) {
                     context.read<BookmarkCubit>().toggleBookmark(verse);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("Voaesorina: ${bookmark.bookName} ${bookmark.chapter}:${bookmark.verse}"),
+                        content: Text(
+                          "Voaesorina: ${bookmark.bookName} ${bookmark.chapter}:${bookmark.verse}",
+                          style: const TextStyle(fontSize: 11),
+                        ),
                         action: SnackBarAction(
                           label: "Haverina",
                           onPressed: () {
@@ -116,17 +126,17 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                     );
                   },
                   child: Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(color: theme.colorScheme.primary.withOpacity(0.08)),
+                      borderRadius: BorderRadius.circular(4),
+                      side: BorderSide(color: theme.colorScheme.primary.withOpacity(0.06)),
                     ),
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(4),
                       onTap: () => _navigateToReader(verse),
                       child: Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -136,24 +146,24 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
                                 Text(
                                   "${bookmark.bookName} ${bookmark.chapter}:${bookmark.verse}",
                                   style: theme.textTheme.titleMedium?.copyWith(
-                                    fontSize: 14,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                     color: theme.colorScheme.primary,
                                   ),
                                 ),
                                 Icon(
                                   Icons.arrow_forward_ios,
-                                  size: 12,
+                                  size: 10,
                                   color: theme.colorScheme.primary.withOpacity(0.5),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 4),
                             Text(
                               bookmark.text,
                               style: theme.textTheme.bodyMedium?.copyWith(
-                                fontSize: 14,
-                                height: 1.4,
+                                fontSize: 12,
+                                height: 1.3,
                                 color: theme.colorScheme.onSurface.withOpacity(0.8),
                               ),
                             ),
@@ -166,16 +176,16 @@ class _BookmarksScreenState extends State<BookmarksScreen> {
               },
             );
           }
-
+ 
           if (state is BookmarkError) {
             return Center(
               child: Text(
                 state.message,
-                style: const TextStyle(color: Colors.red),
+                style: const TextStyle(color: Colors.red, fontSize: 12),
               ),
             );
           }
-
+ 
           return const SizedBox.shrink();
         },
       ),

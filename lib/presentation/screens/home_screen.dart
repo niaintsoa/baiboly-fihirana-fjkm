@@ -143,50 +143,39 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
             return CustomScrollView(
               slivers: [
-                // En-tête personnalisé fluide
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Tonga soa",
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Text(
-                                  "Baiboly Malagasy",
-                                  style: theme.textTheme.titleLarge?.copyWith(
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              "Baiboly Malagasy",
+                              style: theme.textTheme.titleLarge?.copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            // Bouton Favoris
-                            IconButton.filledTonal(
+                            // Bouton Favoris compact
+                            IconButton(
+                              constraints: const BoxConstraints(),
+                              padding: EdgeInsets.zero,
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: (_) => const BookmarksScreen()),
                                 );
                               },
-                              icon: const Icon(Icons.bookmark_outline),
+                              icon: const Icon(Icons.bookmark_outline, size: 20),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 8),
                         
-                        // Barre de recherche stylisée (Bouton qui ouvre l'écran de recherche)
+                        // Barre de recherche compacte
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -195,186 +184,142 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             );
                           },
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                              borderRadius: BorderRadius.circular(16),
+                              color: theme.colorScheme.primaryContainer.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(4),
                               border: Border.all(
-                                color: theme.colorScheme.primary.withOpacity(0.1),
+                                color: theme.colorScheme.primary.withOpacity(0.08),
                               ),
                             ),
                             child: Row(
                               children: [
-                                Icon(Icons.search, color: theme.colorScheme.primary),
-                                const SizedBox(width: 12),
+                                Icon(Icons.search, size: 16, color: theme.colorScheme.primary),
+                                const SizedBox(width: 8),
                                 Text(
                                   "Hikaroka andininy...",
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: theme.colorScheme.onSurface.withOpacity(0.6),
-                                    fontSize: 15,
+                                    fontSize: 12,
                                   ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 8),
 
-                        // Verset du jour (Design premium avec dégradé et micro-ombras)
+                        // Verset du jour minimaliste
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.all(20),
+                          padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                theme.colorScheme.primary,
-                                theme.colorScheme.primary.withBlue(100).withRed(120),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
+                            color: theme.colorScheme.primary.withOpacity(0.06),
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(
+                              color: theme.colorScheme.primary.withOpacity(0.1),
                             ),
-                            borderRadius: BorderRadius.circular(24),
-                            boxShadow: [
-                              BoxShadow(
-                                color: theme.colorScheme.primary.withOpacity(0.2),
-                                blurRadius: 15,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                children: [
-                                  const Icon(Icons.lightbulb_outline, color: Colors.white70, size: 20),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    "Tenin'Andriamanitra ho anao",
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      color: Colors.white70,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
                               Text(
-                                '"${_selectedVerse['text']}"',
-                                style: theme.textTheme.bodyLarge?.copyWith(
-                                  color: Colors.white,
-                                  fontSize: 17,
-                                  fontStyle: FontStyle.italic,
-                                  height: 1.4,
+                                "Tenin'Andriamanitra:",
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.colorScheme.primary,
                                 ),
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 4),
+                              Text(
+                                '"${_selectedVerse['text']}"',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontSize: 12,
+                                  fontStyle: FontStyle.italic,
+                                  height: 1.3,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
                               Align(
                                 alignment: Alignment.bottomRight,
                                 child: Text(
                                   _selectedVerse['ref']!,
                                   style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: Colors.white.withOpacity(0.9),
+                                    fontSize: 11,
                                     fontWeight: FontWeight.bold,
+                                    color: theme.colorScheme.primary,
                                   ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 10),
 
-                        // Section Dernier livre lu (si existant)
+                        // Section Dernier livre lu compacte
                         if (_lastReadBook != null) ...[
-                          Text(
-                            "Tohizo ny famakiana",
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
                           InkWell(
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (_) => ReaderScreen(
-                                    book: _lastReadBook!,
-                                    initialChapter: _lastReadChapter,
+                                  MaterialPageRoute(
+                                    builder: (_) => ReaderScreen(
+                                      book: _lastReadBook!,
+                                      initialChapter: _lastReadChapter,
+                                    ),
                                   ),
-                                ),
-                              ).then((_) => _loadLastRead());
-                            },
-                            borderRadius: BorderRadius.circular(16),
+                                ).then((_) => _loadLastRead());
+                              },
+                            borderRadius: BorderRadius.circular(4),
                             child: Container(
-                              padding: const EdgeInsets.all(16),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                               decoration: BoxDecoration(
-                                color: theme.colorScheme.secondary.withOpacity(0.08),
-                                borderRadius: BorderRadius.circular(16),
+                                color: theme.colorScheme.secondary.withOpacity(0.06),
+                                borderRadius: BorderRadius.circular(4),
                                 border: Border.all(
-                                  color: theme.colorScheme.secondary.withOpacity(0.15),
+                                  color: theme.colorScheme.secondary.withOpacity(0.1),
                                 ),
                               ),
                               child: Row(
                                 children: [
-                                  Icon(Icons.menu_book, color: theme.colorScheme.secondary, size: 28),
-                                  const SizedBox(width: 16),
+                                  Icon(Icons.menu_book, color: theme.colorScheme.secondary, size: 16),
+                                  const SizedBox(width: 8),
                                   Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "${_lastReadBook!.name} (Toko $_lastReadChapter)",
-                                          style: theme.textTheme.titleMedium?.copyWith(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          "Kitiho raha hanohy ny famakiana",
-                                          style: theme.textTheme.bodyMedium?.copyWith(
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                      ],
+                                    child: Text(
+                                      "Tohizo: ${_lastReadBook!.name} Toko $_lastReadChapter",
+                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
-                                  Icon(Icons.arrow_forward_ios, size: 16, color: theme.colorScheme.secondary),
+                                  Icon(Icons.arrow_forward_ios, size: 10, color: theme.colorScheme.secondary),
                                 ],
                               ),
                             ),
                           ),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: 10),
                         ],
-
-                        // Titre des Livres
-                        Text(
-                          "Boky ao amin'ny Baiboly",
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
                         
-                        // Onglets Testament Taloha / Vaovao
+                        // Onglets Testamenta minimaux
                         TabBar(
                           controller: _tabController,
                           indicatorSize: TabBarIndicatorSize.tab,
                           dividerColor: Colors.transparent,
                           indicator: BoxDecoration(
                             color: theme.colorScheme.primary,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(4),
                           ),
                           labelColor: Colors.white,
                           unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.7),
                           labelStyle: theme.textTheme.titleMedium?.copyWith(
-                            fontSize: 15,
+                            fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
                           tabs: const [
-                            Tab(text: "Testamenta Taloha"),
-                            Tab(text: "Testamenta Vaovao"),
+                            Tab(height: 30, text: "Testamenta Taloha"),
+                            Tab(height: 30, text: "Testamenta Vaovao"),
                           ],
                         ),
                       ],
@@ -407,79 +352,54 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     if (books.isEmpty) {
       return const Center(
         child: Padding(
-          padding: EdgeInsets.all(20.0),
-          child: Text("Tsy misy boky hita"),
+          padding: EdgeInsets.all(12.0),
+          child: Text("Tsy misy boky hita", style: TextStyle(fontSize: 11)),
         ),
       );
     }
 
     return GridView.builder(
-      padding: const EdgeInsets.all(20.0),
-      physics: const ClampingScrollPhysics(), // pour éviter les conflits de scroll
+      padding: const EdgeInsets.all(8.0),
+      physics: const ClampingScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 2.2,
+        crossAxisCount: 3,
+        crossAxisSpacing: 6,
+        mainAxisSpacing: 6,
+        childAspectRatio: 1.8,
       ),
       itemCount: books.length,
       itemBuilder: (context, index) {
         final book = books[index];
         return InkWell(
           onTap: () => _showChapterSelectionDialog(book),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(4),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
             decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(16),
+              color: theme.colorScheme.primaryContainer.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(4),
               border: Border.all(
-                color: theme.colorScheme.primary.withOpacity(0.08),
+                color: theme.colorScheme.primary.withOpacity(0.06),
               ),
             ),
-            child: Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Raccourci ou numéro du livre discret
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withOpacity(0.1),
-                    shape: BoxShape.circle,
+                Text(
+                  book.name,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
                   ),
-                  child: Center(
-                    child: Text(
-                      "${index + 1}",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        book.name,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        "${book.totalChapters} toko",
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
+                const SizedBox(height: 2),
+                Text(
+                  "${book.totalChapters} toko",
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontSize: 10,
                   ),
                 ),
               ],
@@ -490,7 +410,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     );
   }
 
-  // Boîte de dialogue premium pour choisir le chapitre
+  // Boîte de dialogue compacte pour choisir le chapitre
   void _showChapterSelectionDialog(BookModel book) {
     final theme = Theme.of(context);
     showModalBottomSheet(
@@ -498,50 +418,50 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       isScrollControlled: true,
       backgroundColor: theme.colorScheme.surface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
       ),
       builder: (context) {
         return DraggableScrollableSheet(
-          initialChildSize: 0.5,
-          maxChildSize: 0.8,
-          minChildSize: 0.3,
+          initialChildSize: 0.4,
+          maxChildSize: 0.7,
+          minChildSize: 0.2,
           expand: false,
           builder: (context, scrollController) {
             return Column(
               children: [
-                const SizedBox(height: 12),
+                const SizedBox(height: 6),
                 Container(
-                  width: 40,
-                  height: 4,
+                  width: 30,
+                  height: 3,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.onSurface.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: BorderRadius.circular(1),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 Text(
-                  "Mifidiana Toko - ${book.name}",
+                  "Toko - ${book.name}",
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: 14,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 Expanded(
                   child: GridView.builder(
                     controller: scrollController,
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(8),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 5,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
+                      crossAxisCount: 6,
+                      crossAxisSpacing: 6,
+                      mainAxisSpacing: 6,
                     ),
                     itemCount: book.totalChapters,
                     itemBuilder: (context, index) {
                       final chapter = index + 1;
                       return InkWell(
                         onTap: () {
-                          Navigator.pop(context); // fermer le BottomSheet
+                          Navigator.pop(context);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -552,20 +472,20 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             ),
                           ).then((_) => _loadLastRead());
                         },
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(4),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primaryContainer.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(12),
+                            color: theme.colorScheme.primaryContainer.withOpacity(0.4),
+                            borderRadius: BorderRadius.circular(4),
                             border: Border.all(
-                              color: theme.colorScheme.primary.withOpacity(0.1),
+                              color: theme.colorScheme.primary.withOpacity(0.08),
                             ),
                           ),
                           child: Center(
                             child: Text(
                               "$chapter",
                               style: theme.textTheme.titleMedium?.copyWith(
-                                fontSize: 16,
+                                fontSize: 13,
                                 fontWeight: FontWeight.bold,
                                 color: theme.colorScheme.primary,
                               ),
