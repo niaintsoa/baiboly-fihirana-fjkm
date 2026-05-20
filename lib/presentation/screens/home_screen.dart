@@ -345,6 +345,43 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             );
           },
         ),
+      )
+      : const FihiranaScreen(),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: theme.colorScheme.onSurface.withOpacity(0.06),
+              width: 0.5,
+            ),
+          ),
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          elevation: 0,
+          backgroundColor: theme.colorScheme.surface,
+          selectedFontSize: 11,
+          unselectedFontSize: 11,
+          iconSize: 18,
+          selectedItemColor: theme.colorScheme.primary,
+          unselectedItemColor: theme.colorScheme.onSurface.withOpacity(0.6),
+          type: BottomNavigationBarType.fixed,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.menu_book),
+              label: "Baiboly",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.music_note),
+              label: "Fihirana",
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -502,44 +539,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               ],
             );
           },
-        )
-      : const FihiranaScreen(),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: theme.colorScheme.onSurface.withOpacity(0.06),
-              width: 0.5,
-            ),
-          ),
-        ),
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          elevation: 0,
-          backgroundColor: theme.colorScheme.surface,
-          selectedFontSize: 11,
-          unselectedFontSize: 11,
-          iconSize: 18,
-          selectedItemColor: theme.colorScheme.primary,
-          unselectedItemColor: theme.colorScheme.onSurface.withOpacity(0.6),
-          type: BottomNavigationBarType.fixed,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.menu_book),
-              label: "Baiboly",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.music_note),
-              label: "Fihirana",
-            ),
-          ],
-        ),
-      ),
+        );
+      },
     );
   }
 }
