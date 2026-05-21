@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:convert';
 import 'package:baiboly_apk/data/models/hymn_model.dart';
+import 'package:baiboly_apk/data/models/fandaharana_item.dart';
 import 'package:baiboly_apk/presentation/cubits/hymn_detail_cubit.dart';
+import 'package:baiboly_apk/presentation/cubits/fandaharana_cubit.dart';
 import 'package:baiboly_apk/presentation/widgets/hymn_verse_tile.dart';
 
 class HymnReaderScreen extends StatefulWidget {
@@ -32,6 +35,22 @@ class _HymnReaderScreenState extends State<HymnReaderScreen> {
         leading: IconButton(icon: const Icon(Icons.arrow_back, size: 20), onPressed: () => Navigator.pop(context)),
         title: Text("$categoryName - Hira ${widget.hymn.number}", style: theme.textTheme.titleMedium?.copyWith(fontSize: 14, fontWeight: FontWeight.bold)),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.playlist_add, size: 20),
+            onPressed: () {
+              final item = FandaharanaItem(
+                id: 'hymn_${widget.hymn.id}',
+                type: 'hymn',
+                title: '$categoryName - Hira ${widget.hymn.number}',
+                subtitle: widget.hymn.title.isNotEmpty ? widget.hymn.title : 'Fihirana',
+                data: jsonEncode(widget.hymn.toMap()),
+              );
+              context.read<FandaharanaCubit>().addItem(item);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Tafiditra anaty fandaharana'), duration: Duration(seconds: 2)),
+              );
+            },
+          ),
           BlocBuilder<HymnDetailCubit, HymnDetailState>(
             builder: (context, state) {
               bool isBookmarked = state is HymnDetailLoaded && state.isBookmarked;

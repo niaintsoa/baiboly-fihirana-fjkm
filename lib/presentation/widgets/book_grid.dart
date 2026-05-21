@@ -43,16 +43,16 @@ class BookGrid extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
             child: Container(
               decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: theme.colorScheme.primary.withOpacity(0.2)),
+                color: theme.colorScheme.primary.withOpacity(0.06),
+                borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
-                    color: theme.colorScheme.primary.withOpacity(0.1),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
+                    color: theme.colorScheme.primary.withOpacity(0.08),
+                    blurRadius: 6,
+                    offset: const Offset(0, 3),
                   )
                 ],
+                border: Border.all(color: theme.colorScheme.primary.withOpacity(0.05)),
               ),
               child: Center(
                 child: Text(

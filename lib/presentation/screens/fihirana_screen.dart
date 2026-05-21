@@ -73,15 +73,33 @@ class _FihiranaScreenState extends State<FihiranaScreen> with SingleTickerProvid
               const SizedBox(height: 8),
               _buildSearchBar(theme),
               const SizedBox(height: 8),
-              TabBar(
-                controller: _tabController,
-                indicatorSize: TabBarIndicatorSize.tab,
-                dividerColor: Colors.transparent,
-                indicator: BoxDecoration(color: theme.colorScheme.primary, borderRadius: BorderRadius.circular(4)),
-                labelColor: Colors.white,
-                unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.7),
-                labelStyle: theme.textTheme.titleMedium?.copyWith(fontSize: 11, fontWeight: FontWeight.bold),
-                tabs: _tabLabels.map((label) => Tab(height: 28, text: label)).toList(),
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.onSurface.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TabBar(
+                  controller: _tabController,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  dividerColor: Colors.transparent,
+                  indicator: BoxDecoration(
+                    color: theme.colorScheme.surface,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.colorScheme.onSurface.withOpacity(0.08),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      )
+                    ],
+                  ),
+                  labelColor: theme.colorScheme.primary,
+                  unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.5),
+                  labelStyle: theme.textTheme.titleMedium?.copyWith(fontSize: 12, fontWeight: FontWeight.bold),
+                  unselectedLabelStyle: theme.textTheme.titleMedium?.copyWith(fontSize: 12, fontWeight: FontWeight.w600),
+                  tabs: _tabLabels.map((label) => Tab(height: 32, text: label)).toList(),
+                ),
               ),
               const SizedBox(height: 8),
               Expanded(
@@ -110,11 +128,18 @@ class _FihiranaScreenState extends State<FihiranaScreen> with SingleTickerProvid
 
   Widget _buildSearchBar(ThemeData theme) {
     return Container(
-      height: 36,
+      height: 40,
       decoration: BoxDecoration(
-        color: theme.colorScheme.primaryContainer.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: theme.colorScheme.primary.withOpacity(0.08)),
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.onSurface.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(color: theme.colorScheme.onSurface.withOpacity(0.05)),
       ),
       child: Row(
         children: [

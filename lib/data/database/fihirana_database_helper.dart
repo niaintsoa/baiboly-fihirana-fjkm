@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
@@ -21,13 +22,13 @@ class FihiranaDatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    print("FihiranaDatabaseHelper: Chemin de la base de données locale : $path");
+    debugPrint("FihiranaDatabaseHelper: Chemin de la base de données locale : $path");
 
     final exists = await databaseExists(path);
-    print("FihiranaDatabaseHelper: La base de données existe localement ? $exists");
+    debugPrint("FihiranaDatabaseHelper: La base de données existe localement ? $exists");
 
     if (!exists) {
-      print("FihiranaDatabaseHelper: La base de données n'existe pas localement. Copie depuis les assets...");
+      debugPrint("FihiranaDatabaseHelper: La base de données n'existe pas localement. Copie depuis les assets...");
       try {
         await Directory(dirname(path)).create(recursive: true);
         
@@ -35,9 +36,9 @@ class FihiranaDatabaseHelper {
         List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
         
         await File(path).writeAsBytes(bytes, flush: true);
-        print("FihiranaDatabaseHelper: Copie depuis les assets réussie.");
+        debugPrint("FihiranaDatabaseHelper: Copie depuis les assets réussie.");
       } catch (e) {
-        print("FihiranaDatabaseHelper: Erreur de copie de l'asset. Création d'une base de démo. Erreur : $e");
+        debugPrint("FihiranaDatabaseHelper: Erreur de copie de l'asset. Création d'une base de démo. Erreur : $e");
         return await _createDemoDatabase(path);
       }
     }
@@ -47,28 +48,28 @@ class FihiranaDatabaseHelper {
     // Vérification de sécurité : si c'est la base de démo ou incomplète, on force la copie de la vraie base de données depuis les assets.
     try {
       final hymnsCount = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM hymns')) ?? 0;
-      print("FihiranaDatabaseHelper: Nombre de cantiques trouvés dans la base actuelle : $hymnsCount");
+      debugPrint("FihiranaDatabaseHelper: Nombre de cantiques trouvés dans la base actuelle : $hymnsCount");
       if (hymnsCount < 800) {
-        print("FihiranaDatabaseHelper: Nombre de cantiques ($hymnsCount) inférieur au minimum attendu. Remplacement par la base complète des assets...");
+        debugPrint("FihiranaDatabaseHelper: Nombre de cantiques ($hymnsCount) inférieur au minimum attendu. Remplacement par la base complète des assets...");
         await db.close();
         
         try {
           await File(path).delete();
-          print("FihiranaDatabaseHelper: Ancienne base de données supprimée.");
+          debugPrint("FihiranaDatabaseHelper: Ancienne base de données supprimée.");
         } catch (e) {
-          print("FihiranaDatabaseHelper: Impossible de supprimer la base actuelle : $e");
+          debugPrint("FihiranaDatabaseHelper: Impossible de supprimer la base actuelle : $e");
         }
 
         await Directory(dirname(path)).create(recursive: true);
         ByteData data = await rootBundle.load('assets/database/$filePath');
         List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
         await File(path).writeAsBytes(bytes, flush: true);
-        print("FihiranaDatabaseHelper: Base complète copiée depuis les assets.");
+        debugPrint("FihiranaDatabaseHelper: Base complète copiée depuis les assets.");
         
         db = await openDatabase(path);
       }
     } catch (e) {
-      print("FihiranaDatabaseHelper: Erreur lors de la lecture ou vérification. Force la copie...");
+      debugPrint("FihiranaDatabaseHelper: Erreur lors de la lecture ou vérification. Force la copie...");
       try {
         await db.close();
         try {
@@ -80,7 +81,7 @@ class FihiranaDatabaseHelper {
         await File(path).writeAsBytes(bytes, flush: true);
         db = await openDatabase(path);
       } catch (err) {
-        print("FihiranaDatabaseHelper: Échec critique de la copie : $err. Remplissage par les données de secours.");
+        debugPrint("FihiranaDatabaseHelper: Échec critique de la copie : $err. Remplissage par les données de secours.");
         db = await openDatabase(path);
         await _populateDemoData(db);
       }
@@ -110,7 +111,7 @@ class FihiranaDatabaseHelper {
   }
 
   Future<void> _populateDemoData(Database db) async {
-    print("FihiranaDatabaseHelper: Remplissage avec les données de démonstration de secours...");
+    debugPrint("FihiranaDatabaseHelper: Remplissage avec les données de démonstration de secours...");
     await db.execute('DROP TABLE IF EXISTS hymns');
     await db.execute('DROP TABLE IF EXISTS verses');
     await db.execute('DROP TABLE IF EXISTS hymn_bookmarks');

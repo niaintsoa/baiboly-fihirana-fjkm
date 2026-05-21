@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
@@ -22,14 +23,14 @@ class BibleDatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    print("BibleDatabaseHelper: Chemin de la base de données local : $path");
+    debugPrint("BibleDatabaseHelper: Chemin de la base de données local : $path");
 
     // Vérifie si la base de données existe localement dans les documents
     final exists = await databaseExists(path);
-    print("BibleDatabaseHelper: La base de données existe localement ? $exists");
+    debugPrint("BibleDatabaseHelper: La base de données existe localement ? $exists");
 
     if (!exists) {
-      print("BibleDatabaseHelper: La base de données n'existe pas localement. Copie depuis les assets...");
+      debugPrint("BibleDatabaseHelper: La base de données n'existe pas localement. Copie depuis les assets...");
       try {
         await Directory(dirname(path)).create(recursive: true);
         
@@ -37,9 +38,9 @@ class BibleDatabaseHelper {
         List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
         
         await File(path).writeAsBytes(bytes, flush: true);
-        print("BibleDatabaseHelper: Copie depuis les assets réussie.");
+        debugPrint("BibleDatabaseHelper: Copie depuis les assets réussie.");
       } catch (e) {
-        print("BibleDatabaseHelper: Erreur de copie de l'asset. Création d'une base de démo. Erreur : $e");
+        debugPrint("BibleDatabaseHelper: Erreur de copie de l'asset. Création d'une base de démo. Erreur : $e");
         return await _createDemoDatabase(path);
       }
     }
@@ -50,29 +51,29 @@ class BibleDatabaseHelper {
     // on force la copie de la vraie base de données depuis les assets.
     try {
       final booksCount = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM books')) ?? 0;
-      print("BibleDatabaseHelper: Nombre de livres trouvés dans la base actuelle : $booksCount");
+      debugPrint("BibleDatabaseHelper: Nombre de livres trouvés dans la base actuelle : $booksCount");
       if (booksCount < 66) {
-        print("BibleDatabaseHelper: Nombre de livres ($booksCount) inférieur à 66. Remplacement par la base complète des assets...");
+        debugPrint("BibleDatabaseHelper: Nombre de livres ($booksCount) inférieur à 66. Remplacement par la base complète des assets...");
         await db.close();
         
         // Supprimer l'ancienne base pour éviter tout verrouillage
         try {
           await File(path).delete();
-          print("BibleDatabaseHelper: Ancienne base de données supprimée avec succès.");
+          debugPrint("BibleDatabaseHelper: Ancienne base de données supprimée avec succès.");
         } catch (e) {
-          print("BibleDatabaseHelper: Impossible de supprimer l'ancienne base de données : $e");
+          debugPrint("BibleDatabaseHelper: Impossible de supprimer l'ancienne base de données : $e");
         }
 
         await Directory(dirname(path)).create(recursive: true);
         ByteData data = await rootBundle.load('assets/database/$filePath');
         List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
         await File(path).writeAsBytes(bytes, flush: true);
-        print("BibleDatabaseHelper: Base complète copiée depuis les assets.");
+        debugPrint("BibleDatabaseHelper: Base complète copiée depuis les assets.");
         
         db = await openDatabase(path);
       }
     } catch (e) {
-      print("BibleDatabaseHelper: Erreur lors de la lecture ou vérification du nombre de livres : $e");
+      debugPrint("BibleDatabaseHelper: Erreur lors de la lecture ou vérification du nombre de livres : $e");
       // Si la table 'books' n'existe pas, on tente de forcer la copie également
       try {
         await db.close();
@@ -83,10 +84,10 @@ class BibleDatabaseHelper {
         ByteData data = await rootBundle.load('assets/database/$filePath');
         List<int> bytes = data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
         await File(path).writeAsBytes(bytes, flush: true);
-        print("BibleDatabaseHelper: Base de données copiée après erreur de table.");
+        debugPrint("BibleDatabaseHelper: Base de données copiée après erreur de table.");
         db = await openDatabase(path);
       } catch (err) {
-        print("BibleDatabaseHelper: Échec critique de la copie après erreur de table : $err. Remplissage par les données de secours.");
+        debugPrint("BibleDatabaseHelper: Échec critique de la copie après erreur de table : $err. Remplissage par les données de secours.");
         db = await openDatabase(path);
         await _populateDemoData(db);
       }
@@ -98,7 +99,7 @@ class BibleDatabaseHelper {
 
   // Injecte les données de secours si la base est vide et qu'on ne peut pas charger l'asset
   Future<void> _populateDemoData(Database db) async {
-    print("BibleDatabaseHelper: Remplissage avec les données de démonstration de secours...");
+    debugPrint("BibleDatabaseHelper: Remplissage avec les données de démonstration de secours...");
     await db.execute('DROP TABLE IF EXISTS books');
     await db.execute('DROP TABLE IF EXISTS verses');
 
@@ -164,7 +165,7 @@ class BibleDatabaseHelper {
         'text': mat1Verses[i]
       });
     }
-    print("BibleDatabaseHelper: Remplissage de secours terminé.");
+    debugPrint("BibleDatabaseHelper: Remplissage de secours terminé.");
   }
 
   // Crée des tables de secours et des données de démo si l'asset SQL n'est pas encore là

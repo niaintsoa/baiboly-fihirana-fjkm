@@ -52,25 +52,25 @@ class AppTheme {
       return buildTheme(
         brightness: Brightness.dark,
         primaryColor: seedColor == const Color(0xFF8B2635) ? const Color(0xFFE5A93C) : seedColor,
-        surfaceColor: const Color(0xFF141416),
-        onSurfaceColor: const Color(0xFFE3E3E6),
-        containerColor: const Color(0xFF222225),
+        surfaceColor: const Color(0xFF121214), // Deeper sleek dark
+        onSurfaceColor: const Color(0xFFF0F0F5), // Brighter, crisp text
+        containerColor: const Color(0xFF1E1E22), // Modern subtle container
       );
     } else if (mode == 'sepia') {
       return buildTheme(
         brightness: Brightness.light,
-        primaryColor: seedColor == const Color(0xFF8B2635) ? const Color(0xFF7A431D) : seedColor,
-        surfaceColor: const Color(0xFFF4ECD8),
-        onSurfaceColor: const Color(0xFF3E2723),
-        containerColor: const Color(0xFFE8DCBF),
+        primaryColor: seedColor == const Color(0xFF8B2635) ? const Color(0xFF8B5A2B) : seedColor,
+        surfaceColor: const Color(0xFFFAF2E6), // Warmer, more vibrant sepia
+        onSurfaceColor: const Color(0xFF4A3424), // Deeper contrast text
+        containerColor: const Color(0xFFEEDAC0),
       );
     } else {
       return buildTheme(
         brightness: Brightness.light,
         primaryColor: seedColor,
-        surfaceColor: const Color(0xFFFDFBF7),
-        onSurfaceColor: const Color(0xFF2C2520),
-        containerColor: const Color(0xFFF1E9DB),
+        surfaceColor: const Color(0xFFFAFAFC), // Crisp, slightly cool modern white
+        onSurfaceColor: const Color(0xFF1E1E24), // Strong, near-black for high contrast
+        containerColor: const Color(0xFFF0F0F6), // Modern subtle cool container
       );
     }
   }

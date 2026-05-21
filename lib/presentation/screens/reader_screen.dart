@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:convert';
+import 'package:baiboly_apk/data/models/fandaharana_item.dart';
+import 'package:baiboly_apk/presentation/cubits/fandaharana_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:baiboly_apk/data/models/book_model.dart';
 import 'package:baiboly_apk/data/models/verse_model.dart';
@@ -90,6 +93,29 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 // No need to reload chapter data because the verses are already loaded; we just change filtering.
               },
             ),
+          IconButton(
+            icon: const Icon(Icons.playlist_add, size: 20),
+            onPressed: () {
+              final item = FandaharanaItem(
+                id: 'verse_${widget.book.number}_c$_currentChapter',
+                type: 'verse',
+                title: '${widget.book.name} Toko $_currentChapter',
+                subtitle: 'Fandaharana',
+                data: jsonEncode({
+                  'book_number': widget.book.number,
+                  'book_name': widget.book.name,
+                  'chapter': _currentChapter,
+                }),
+              );
+              context.read<FandaharanaCubit>().addItem(item);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Tafiditra anaty fandaharana'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            },
+          ),
           IconButton(icon: const Icon(Icons.text_fields, size: 20), onPressed: () => _showSettings()),
         ],
       ),

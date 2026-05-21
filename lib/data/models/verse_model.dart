@@ -18,8 +18,8 @@ class VerseModel {
   factory VerseModel.fromMap(Map<String, dynamic> map, {String? defaultBookName}) {
     return VerseModel(
       id: map['id'] as int? ?? map['_id'] as int? ?? 0,
-      bookNumber: map['book_number'] as int? ?? map['book'] as int? ?? map['book_id'] as int? ?? 0,
-      bookName: map['book_name'] as String? ?? defaultBookName ?? 'N/A',
+      bookNumber: map['book_number'] as int? ?? map['bookNumber'] as int? ?? map['book'] as int? ?? map['book_id'] as int? ?? 0,
+      bookName: map['book_name'] as String? ?? map['bookName'] as String? ?? defaultBookName ?? 'N/A',
       chapter: map['chapter'] as int? ?? map['chapter_number'] as int? ?? 0,
       verse: map['verse'] as int? ?? map['verse_number'] as int? ?? 0,
       text: map['text'] as String? ?? map['content'] as String? ?? '',

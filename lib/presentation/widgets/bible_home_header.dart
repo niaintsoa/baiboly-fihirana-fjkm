@@ -30,10 +30,21 @@ class BibleHomeHeader extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFC62828), // Rouge
-                      borderRadius: BorderRadius.circular(3),
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFFC62828), Color(0xFFE53935)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(4),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFFC62828).withOpacity(0.3),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: const Text(
                       "Baiboly",
@@ -45,12 +56,13 @@ class BibleHomeHeader extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 5),
+                  const SizedBox(width: 6),
                   Text(
                     "FFPM",
                     style: theme.textTheme.titleLarge?.copyWith(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 0.5,
                     ),
                   ),
                 ],
@@ -61,7 +73,7 @@ class BibleHomeHeader extends StatelessWidget {
                     constraints: const BoxConstraints(),
                     padding: const EdgeInsets.only(right: 12),
                     onPressed: () => _showThemeSettings(context),
-                    icon: const Icon(Icons.settings_outlined, size: 20),
+                    icon: Icon(Icons.settings_outlined, size: 20, color: theme.colorScheme.onSurface),
                   ),
                   IconButton(
                     constraints: const BoxConstraints(),
@@ -69,53 +81,70 @@ class BibleHomeHeader extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(context, NoAnimationPageRoute(builder: (_) => const BookmarksScreen()));
                     },
-                    icon: const Icon(Icons.bookmark_outline, size: 20),
+                    icon: Icon(Icons.bookmark_outline, size: 20, color: theme.colorScheme.onSurface),
                   ),
                 ],
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           GestureDetector(
             onTap: () {
               Navigator.push(context, NoAnimationPageRoute(builder: (_) => const SearchScreen()));
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: theme.colorScheme.primary.withOpacity(0.08)),
+                color: theme.colorScheme.surface,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.colorScheme.onSurface.withOpacity(0.04),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+                border: Border.all(color: theme.colorScheme.onSurface.withOpacity(0.05)),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.search, size: 16, color: theme.colorScheme.primary),
+                  Icon(Icons.search, size: 18, color: theme.colorScheme.primary),
                   const SizedBox(width: 8),
-                  Text("Hikaroka andininy...", style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.6), fontSize: 12)),
+                  Text("Hikaroka andininy...", style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.5), fontSize: 13)),
                 ],
               ),
             ),
           ),
           if (showWordOfGod) ...[
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withOpacity(0.06),
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: theme.colorScheme.primary.withOpacity(0.1)),
+                gradient: LinearGradient(
+                  colors: [theme.colorScheme.primary, theme.colorScheme.primary.withOpacity(0.8)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.colorScheme.primary.withOpacity(0.25),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Tenin'Andriamanitra:", style: theme.textTheme.bodyMedium?.copyWith(fontSize: 11, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
-                  const SizedBox(height: 4),
-                  Text('"${selectedVerse['text']}"', style: theme.textTheme.bodyMedium?.copyWith(fontSize: 12, fontStyle: FontStyle.italic, height: 1.3)),
-                  const SizedBox(height: 4),
+                  Text("Tenin'Andriamanitra:", style: theme.textTheme.bodyMedium?.copyWith(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white.withOpacity(0.9))),
+                  const SizedBox(height: 6),
+                  Text('"${selectedVerse['text']}"', style: theme.textTheme.bodyMedium?.copyWith(fontSize: 13, fontStyle: FontStyle.italic, height: 1.4, color: Colors.white)),
+                  const SizedBox(height: 8),
                   Align(
                     alignment: Alignment.bottomRight,
-                    child: Text(selectedVerse['ref']!, style: theme.textTheme.bodyMedium?.copyWith(fontSize: 10, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
+                    child: Text(selectedVerse['ref']!, style: theme.textTheme.bodyMedium?.copyWith(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white.withOpacity(0.9))),
                   ),
                 ],
               ),
