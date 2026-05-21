@@ -29,12 +29,15 @@ class ReaderScreen extends StatefulWidget {
 class _ReaderScreenState extends State<ReaderScreen> {
   late PageController _pageController;
   late int _currentChapter;
+  bool _showAll = false;
 
   @override
   void initState() {
     super.initState();
     _currentChapter = widget.initialChapter;
     _pageController = PageController(initialPage: _currentChapter - 1);
+    // If initialVerse is provided, we start with showing only that verse (or range)
+    _showAll = widget.initialVerse == null;
     _loadChapterData(_currentChapter);
     context.read<BookmarkCubit>().loadBookmarks();
   }
@@ -72,6 +75,19 @@ class _ReaderScreenState extends State<ReaderScreen> {
           },
         ),
         actions: [
+          if (widget.initialVerse != null)
+            IconButton(
+              icon: Icon(
+                _showAll ? Icons.visibility : Icons.visibility_off,
+                size: 18,
+                color: Colors.grey[600],
+              ),
+              onPressed: () {
+                setState(() => _showAll = !_showAll);
+                // When toggling to show all, we still stay on same chapter; the builder will use _showAll flag.
+                // No need to reload chapter data because the verses are already loaded; we just change filtering.
+              },
+            ),
           IconButton(icon: const Icon(Icons.text_fields, size: 20), onPressed: () => _showSettings()),
         ],
       ),
@@ -87,21 +103,19 @@ class _ReaderScreenState extends State<ReaderScreen> {
            return BlocBuilder<BibleReaderCubit, BibleReaderState>(
              builder: (context, state) {
                if (state is BibleReaderLoading) return const Center(child: CircularProgressIndicator());
-               if (state is BibleReaderLoaded && state.currentChapter == chIdx) {
-                 List<VerseModel> versesToShow = state.verses;
-                 if (chIdx == widget.initialChapter) {
-                   if (widget.initialVerse != null) {
-                     int start = widget.initialVerse!;
-                     int end = widget.initialEndVerse ?? widget.initialVerse!;
-                     versesToShow = state.verses.where((v) => v.verse >= start && v.verse <= end).toList();
-                   }
-                 }
-                 return VerseListView(
-                   verses: versesToShow,
-                   initialVerse: chIdx == widget.initialChapter ? widget.initialVerse : null,
-                   initialEndVerse: chIdx == widget.initialChapter ? widget.initialEndVerse : null,
-                 );
-               }
+                if (state is BibleReaderLoaded && state.currentChapter == chIdx) {
+                  List<VerseModel> versesToShow = state.verses;
+                  if (chIdx == widget.initialChapter && !_showAll && widget.initialVerse != null) {
+                    int start = widget.initialVerse!;
+                    int end = widget.initialEndVerse ?? widget.initialVerse!;
+                    versesToShow = state.verses.where((v) => v.verse >= start && v.verse <= end).toList();
+                  }
+                  return VerseListView(
+                    verses: versesToShow,
+                    initialVerse: chIdx == widget.initialChapter && !_showAll ? widget.initialVerse : null,
+                    initialEndVerse: chIdx == widget.initialChapter && !_showAll ? widget.initialEndVerse : null,
+                  );
+                }
                if (state is BibleReaderError) return Center(child: Text(state.message, style: const TextStyle(fontSize: 12)));
                return const SizedBox.shrink();
              },
