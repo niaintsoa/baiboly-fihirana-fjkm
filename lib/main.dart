@@ -10,6 +10,7 @@ import 'package:baiboly_apk/presentation/cubits/bookmark_cubit.dart';
 import 'package:baiboly_apk/presentation/cubits/fihirana_cubit.dart';
 import 'package:baiboly_apk/presentation/cubits/fihirana_search_cubit.dart';
 import 'package:baiboly_apk/presentation/cubits/hymn_detail_cubit.dart';
+import 'package:baiboly_apk/presentation/cubits/history_cubit.dart';
 import 'package:baiboly_apk/presentation/theme/app_theme.dart';
 import 'package:baiboly_apk/presentation/screens/home_screen.dart';
 
@@ -51,6 +52,9 @@ void main() {
           ),
           BlocProvider<HymnDetailCubit>(
             create: (context) => HymnDetailCubit(fihiranaRepository),
+          ),
+          BlocProvider<HistoryCubit>(
+            create: (context) => HistoryCubit(),
           ),
         ],
         child: const MyApp(),

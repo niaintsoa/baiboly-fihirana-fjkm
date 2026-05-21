@@ -7,6 +7,8 @@ import 'package:baiboly_apk/presentation/cubits/bible_reader_cubit.dart';
 import 'package:baiboly_apk/presentation/cubits/bookmark_cubit.dart';
 import 'package:baiboly_apk/presentation/widgets/verse_list_view.dart';
 import 'package:baiboly_apk/presentation/widgets/theme_settings_sheet.dart';
+import 'package:baiboly_apk/presentation/cubits/history_cubit.dart';
+import 'package:baiboly_apk/data/models/history_item.dart';
 
 class ReaderScreen extends StatefulWidget {
   final BookModel book;
@@ -91,36 +93,66 @@ class _ReaderScreenState extends State<ReaderScreen> {
           IconButton(icon: const Icon(Icons.text_fields, size: 20), onPressed: () => _showSettings()),
         ],
       ),
-      body: PageView.builder(
-        controller: _pageController,
-        itemCount: widget.book.totalChapters,
-        onPageChanged: (idx) {
-          setState(() => _currentChapter = idx + 1);
-          _loadChapterData(_currentChapter);
+      body: BlocListener<BibleReaderCubit, BibleReaderState>(
+        listener: (context, state) {
+          if (state is BibleReaderLoaded) {
+            if (state.verses.isNotEmpty) {
+              final int targetVerse;
+              final String targetText;
+              if (state.currentChapter == widget.initialChapter && widget.initialVerse != null) {
+                targetVerse = widget.initialVerse!;
+                final verseObj = state.verses.firstWhere(
+                  (v) => v.verse == targetVerse,
+                  orElse: () => state.verses.first,
+                );
+                targetText = verseObj.text;
+              } else {
+                targetVerse = 1;
+                targetText = state.verses.first.text;
+              }
+
+              final historyItem = HistoryItem(
+                bookNumber: state.currentBook.number,
+                bookName: state.currentBook.name,
+                chapter: state.currentChapter,
+                verse: targetVerse,
+                text: targetText,
+              );
+              context.read<HistoryCubit>().addItem(historyItem);
+            }
+          }
         },
-        itemBuilder: (context, idx) {
-          final chIdx = idx + 1;
-           return BlocBuilder<BibleReaderCubit, BibleReaderState>(
-             builder: (context, state) {
-               if (state is BibleReaderLoading) return const Center(child: CircularProgressIndicator());
-                if (state is BibleReaderLoaded && state.currentChapter == chIdx) {
-                  List<VerseModel> versesToShow = state.verses;
-                  if (chIdx == widget.initialChapter && !_showAll && widget.initialVerse != null) {
-                    int start = widget.initialVerse!;
-                    int end = widget.initialEndVerse ?? widget.initialVerse!;
-                    versesToShow = state.verses.where((v) => v.verse >= start && v.verse <= end).toList();
+        child: PageView.builder(
+          controller: _pageController,
+          itemCount: widget.book.totalChapters,
+          onPageChanged: (idx) {
+            setState(() => _currentChapter = idx + 1);
+            _loadChapterData(_currentChapter);
+          },
+          itemBuilder: (context, idx) {
+            final chIdx = idx + 1;
+             return BlocBuilder<BibleReaderCubit, BibleReaderState>(
+               builder: (context, state) {
+                 if (state is BibleReaderLoading) return const Center(child: CircularProgressIndicator());
+                  if (state is BibleReaderLoaded && state.currentChapter == chIdx) {
+                    List<VerseModel> versesToShow = state.verses;
+                    if (chIdx == widget.initialChapter && !_showAll && widget.initialVerse != null) {
+                      int start = widget.initialVerse!;
+                      int end = widget.initialEndVerse ?? widget.initialVerse!;
+                      versesToShow = state.verses.where((v) => v.verse >= start && v.verse <= end).toList();
+                    }
+                    return VerseListView(
+                      verses: versesToShow,
+                      initialVerse: chIdx == widget.initialChapter && !_showAll ? widget.initialVerse : null,
+                      initialEndVerse: chIdx == widget.initialChapter && !_showAll ? widget.initialEndVerse : null,
+                    );
                   }
-                  return VerseListView(
-                    verses: versesToShow,
-                    initialVerse: chIdx == widget.initialChapter && !_showAll ? widget.initialVerse : null,
-                    initialEndVerse: chIdx == widget.initialChapter && !_showAll ? widget.initialEndVerse : null,
-                  );
-                }
-               if (state is BibleReaderError) return Center(child: Text(state.message, style: const TextStyle(fontSize: 12)));
-               return const SizedBox.shrink();
-             },
-           );
-        },
+                 if (state is BibleReaderError) return Center(child: Text(state.message, style: const TextStyle(fontSize: 12)));
+                 return const SizedBox.shrink();
+               },
+             );
+          },
+        ),
       ),
       bottomNavigationBar: _buildBottomNavBar(theme),
     );

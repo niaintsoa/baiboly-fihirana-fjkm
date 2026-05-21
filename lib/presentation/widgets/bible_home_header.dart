@@ -7,11 +7,13 @@ import 'package:baiboly_apk/presentation/navigation/no_animation_route.dart';
 class BibleHomeHeader extends StatelessWidget {
   final Map<String, String> selectedVerse;
   final VoidCallback onRefresh;
+  final bool showWordOfGod;
 
   const BibleHomeHeader({
     super.key,
     required this.selectedVerse,
     required this.onRefresh,
+    this.showWordOfGod = true,
   });
 
   @override
@@ -94,29 +96,31 @@ class BibleHomeHeader extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 8),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withOpacity(0.06),
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: theme.colorScheme.primary.withOpacity(0.1)),
+          if (showWordOfGod) ...[
+            const SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary.withOpacity(0.06),
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: theme.colorScheme.primary.withOpacity(0.1)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Tenin'Andriamanitra:", style: theme.textTheme.bodyMedium?.copyWith(fontSize: 11, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
+                  const SizedBox(height: 4),
+                  Text('"${selectedVerse['text']}"', style: theme.textTheme.bodyMedium?.copyWith(fontSize: 12, fontStyle: FontStyle.italic, height: 1.3)),
+                  const SizedBox(height: 4),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Text(selectedVerse['ref']!, style: theme.textTheme.bodyMedium?.copyWith(fontSize: 10, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
+                  ),
+                ],
+              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Tenin'Andriamanitra:", style: theme.textTheme.bodyMedium?.copyWith(fontSize: 11, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
-                const SizedBox(height: 4),
-                Text('"${selectedVerse['text']}"', style: theme.textTheme.bodyMedium?.copyWith(fontSize: 12, fontStyle: FontStyle.italic, height: 1.3)),
-                const SizedBox(height: 4),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Text(selectedVerse['ref']!, style: theme.textTheme.bodyMedium?.copyWith(fontSize: 10, fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
-                ),
-              ],
-            ),
-          ),
+          ],
         ],
       ),
     );

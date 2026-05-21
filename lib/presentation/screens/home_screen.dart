@@ -36,7 +36,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         setState(() {
           _selectedVerse = {
             "text": verse.text,
-            "ref": "${verse.bookName} ${verse.chapter}:${verse.verse}"
+            "ref": "${verse.bookName} ${verse.chapter}:${verse.verse}",
+            "bookNumber": verse.bookNumber.toString(),
+            "chapter": verse.chapter.toString(),
+            "verse": verse.verse.toString(),
           };
         });
       }

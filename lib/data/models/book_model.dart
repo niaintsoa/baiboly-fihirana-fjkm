@@ -23,6 +23,16 @@ class BookModel {
     );
   }
 
+  factory BookModel.empty() {
+    return BookModel(
+      id: 0,
+      number: 0,
+      name: '',
+      testament: '',
+      totalChapters: 0,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
