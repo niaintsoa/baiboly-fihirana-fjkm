@@ -124,9 +124,11 @@ class _ReaderScreenState extends State<ReaderScreen> {
           if (state is BibleReaderLoaded) {
             if (state.verses.isNotEmpty) {
               final int targetVerse;
+              final int? targetEndVerse;
               final String targetText;
               if (state.currentChapter == widget.initialChapter && widget.initialVerse != null) {
                 targetVerse = widget.initialVerse!;
+                targetEndVerse = widget.initialEndVerse;
                 final verseObj = state.verses.firstWhere(
                   (v) => v.verse == targetVerse,
                   orElse: () => state.verses.first,
@@ -134,6 +136,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 targetText = verseObj.text;
               } else {
                 targetVerse = 1;
+                targetEndVerse = null;
                 targetText = state.verses.first.text;
               }
 
@@ -142,6 +145,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 bookName: state.currentBook.name,
                 chapter: state.currentChapter,
                 verse: targetVerse,
+                endVerse: targetEndVerse,
                 text: targetText,
               );
               context.read<HistoryCubit>().addItem(historyItem);

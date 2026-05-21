@@ -75,14 +75,24 @@ class BibleView extends StatelessWidget {
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(vertical: 10),
                                   decoration: BoxDecoration(
-                                    color: tabController.index == 0 ? theme.colorScheme.surface : Colors.transparent,
+                                    gradient: tabController.index == 0
+                                        ? LinearGradient(
+                                            colors: [
+                                              theme.colorScheme.primary,
+                                              theme.colorScheme.primary.withOpacity(0.8),
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          )
+                                        : null,
+                                    color: tabController.index == 0 ? null : Colors.transparent,
                                     borderRadius: BorderRadius.circular(8),
                                     boxShadow: tabController.index == 0
                                         ? [
                                             BoxShadow(
-                                              color: theme.colorScheme.onSurface.withOpacity(0.08),
-                                              blurRadius: 4,
-                                              offset: const Offset(0, 2),
+                                              color: theme.colorScheme.primary.withOpacity(0.25),
+                                              blurRadius: 6,
+                                              offset: const Offset(0, 3),
                                             )
                                           ]
                                         : null,
@@ -93,7 +103,7 @@ class BibleView extends StatelessWidget {
                                       style: theme.textTheme.titleMedium?.copyWith(
                                         fontSize: 12,
                                         fontWeight: tabController.index == 0 ? FontWeight.bold : FontWeight.w600,
-                                        color: tabController.index == 0 ? theme.colorScheme.primary : theme.colorScheme.onSurface.withOpacity(0.5),
+                                        color: tabController.index == 0 ? Colors.white : theme.colorScheme.onSurface.withOpacity(0.5),
                                       ),
                                     ),
                                   ),
@@ -106,14 +116,24 @@ class BibleView extends StatelessWidget {
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(vertical: 10),
                                   decoration: BoxDecoration(
-                                    color: tabController.index == 1 ? theme.colorScheme.surface : Colors.transparent,
+                                    gradient: tabController.index == 1
+                                        ? LinearGradient(
+                                            colors: [
+                                              theme.colorScheme.primary,
+                                              theme.colorScheme.primary.withOpacity(0.8),
+                                            ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          )
+                                        : null,
+                                    color: tabController.index == 1 ? null : Colors.transparent,
                                     borderRadius: BorderRadius.circular(8),
                                     boxShadow: tabController.index == 1
                                         ? [
                                             BoxShadow(
-                                              color: theme.colorScheme.onSurface.withOpacity(0.08),
-                                              blurRadius: 4,
-                                              offset: const Offset(0, 2),
+                                              color: theme.colorScheme.primary.withOpacity(0.25),
+                                              blurRadius: 6,
+                                              offset: const Offset(0, 3),
                                             )
                                           ]
                                         : null,
@@ -124,7 +144,7 @@ class BibleView extends StatelessWidget {
                                       style: theme.textTheme.titleMedium?.copyWith(
                                         fontSize: 12,
                                         fontWeight: tabController.index == 1 ? FontWeight.bold : FontWeight.w600,
-                                        color: tabController.index == 1 ? theme.colorScheme.primary : theme.colorScheme.onSurface.withOpacity(0.5),
+                                        color: tabController.index == 1 ? Colors.white : theme.colorScheme.onSurface.withOpacity(0.5),
                                       ),
                                     ),
                                   ),
@@ -282,36 +302,69 @@ class BibleView extends StatelessWidget {
         }
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        margin: const EdgeInsets.only(bottom: 8),
+        margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(8),
+          gradient: LinearGradient(
+            colors: [
+              theme.colorScheme.secondary.withOpacity(0.06),
+              theme.colorScheme.secondary.withOpacity(0.01),
+            ],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: theme.colorScheme.secondary.withOpacity(0.08),
+            width: 1,
+          ),
           boxShadow: [
             BoxShadow(
-              color: theme.colorScheme.onSurface.withOpacity(0.04),
-              blurRadius: 6,
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 4,
               offset: const Offset(0, 2),
             ),
           ],
-          border: Border.all(color: theme.colorScheme.onSurface.withOpacity(0.05)),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
           child: IntrinsicHeight(
             child: Row(
               children: [
                 Container(
-                  width: 4,
-                  color: theme.colorScheme.secondary,
+                  width: 5,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        theme.colorScheme.secondary,
+                        theme.colorScheme.secondary.withOpacity(0.6),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      bottomLeft: Radius.circular(12),
+                    ),
+                  ),
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                     child: Row(
                       children: [
-                        Icon(item.type == 'verse' ? Icons.menu_book : Icons.music_note, size: 14, color: theme.colorScheme.secondary.withOpacity(0.8)),
-                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.secondary.withOpacity(0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            item.type == 'verse' ? Icons.menu_book : Icons.music_note,
+                            size: 16,
+                            color: theme.colorScheme.secondary,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -319,19 +372,28 @@ class BibleView extends StatelessWidget {
                               Text(
                                 item.title,
                                 style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontSize: 12,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   color: theme.colorScheme.onSurface,
                                 ),
                               ),
+                              const SizedBox(height: 3),
                               Text(
                                 item.subtitle,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.bodySmall?.copyWith(fontSize: 10, color: theme.colorScheme.onSurface.withOpacity(0.7)),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  fontSize: 11,
+                                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                                ),
                               ),
                             ],
                           ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 12,
+                          color: theme.colorScheme.secondary.withOpacity(0.6),
                         ),
                       ],
                     ),
@@ -360,59 +422,97 @@ class BibleView extends StatelessWidget {
                 book: book,
                 initialChapter: item.chapter,
                 initialVerse: item.verse,
+                initialEndVerse: item.endVerse,
               ),
             ),
           );
         }
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        margin: const EdgeInsets.only(bottom: 8),
+        margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(8),
+          gradient: LinearGradient(
+            colors: [
+              theme.colorScheme.primary.withOpacity(0.06),
+              theme.colorScheme.primary.withOpacity(0.01),
+            ],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: theme.colorScheme.primary.withOpacity(0.08),
+            width: 1,
+          ),
           boxShadow: [
             BoxShadow(
-              color: theme.colorScheme.onSurface.withOpacity(0.04),
-              blurRadius: 6,
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 4,
               offset: const Offset(0, 2),
             ),
           ],
-          border: Border.all(color: theme.colorScheme.onSurface.withOpacity(0.05)),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
           child: IntrinsicHeight(
             child: Row(
               children: [
                 Container(
-                  width: 4,
-                  color: theme.colorScheme.primary,
+                  width: 5,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        theme.colorScheme.primary,
+                        theme.colorScheme.primary.withOpacity(0.6),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      bottomLeft: Radius.circular(12),
+                    ),
+                  ),
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                     child: Row(
                       children: [
-                        Icon(Icons.access_time, size: 14, color: theme.colorScheme.primary.withOpacity(0.7)),
-                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primary.withOpacity(0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.history,
+                            size: 16,
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${item.bookName} ${item.chapter}:${item.verse}',
+                                '${item.bookName} ${item.chapter}:${item.verse}${item.endVerse != null && item.endVerse != item.verse ? "-${item.endVerse}" : ""}',
                                 style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontSize: 12,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   color: theme.colorScheme.onSurface,
                                 ),
                               ),
+                              const SizedBox(height: 3),
                               Text(
                                 item.text,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.bodySmall?.copyWith(fontSize: 10, color: theme.colorScheme.onSurface.withOpacity(0.7)),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  fontSize: 11,
+                                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                                ),
                               ),
                             ],
                           ),
@@ -420,7 +520,7 @@ class BibleView extends StatelessWidget {
                         IconButton(
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
-                          icon: Icon(Icons.close, size: 14, color: theme.colorScheme.onSurface.withOpacity(0.4)),
+                          icon: Icon(Icons.delete_outline, size: 16, color: theme.colorScheme.error.withOpacity(0.6)),
                           onPressed: () {
                             context.read<HistoryCubit>().deleteItem(item);
                           },
@@ -473,58 +573,105 @@ class BibleView extends StatelessWidget {
             }
           }
         },
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [theme.colorScheme.primary, theme.colorScheme.primary.withOpacity(0.8)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  theme.colorScheme.primary,
+                  theme.colorScheme.primary.withOpacity(0.85),
+                  theme.colorScheme.primary.withOpacity(0.7),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: theme.colorScheme.primary.withOpacity(0.25),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.primary.withOpacity(0.25),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Tenin'Andriamanitra:",
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white.withOpacity(0.9),
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                '"${selectedVerse['text']}"',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontSize: 13,
-                  fontStyle: FontStyle.italic,
-                  height: 1.4,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Text(
-                  selectedVerse['ref'] ?? '',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white.withOpacity(0.9),
+            child: Stack(
+              children: [
+                Positioned(
+                  right: -10,
+                  top: -20,
+                  child: Icon(
+                    Icons.format_quote,
+                    size: 80,
+                    color: Colors.white.withOpacity(0.12),
                   ),
                 ),
-              ),
-            ],
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.auto_awesome,
+                          size: 14,
+                          color: Colors.white.withOpacity(0.9),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          "TENIN'ANDRIAMANITRA",
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.5,
+                            color: Colors.white.withOpacity(0.9),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      width: 40,
+                      height: 2,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(1),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      '"${selectedVerse['text']}"',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontSize: 13.5,
+                        fontStyle: FontStyle.italic,
+                        height: 1.5,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          selectedVerse['ref'] ?? '',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontSize: 10.5,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

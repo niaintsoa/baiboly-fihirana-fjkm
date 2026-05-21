@@ -3,6 +3,7 @@ class HistoryItem {
   final String bookName;
   final int chapter;
   final int verse;
+  final int? endVerse;
   final String text;
 
   const HistoryItem({
@@ -10,6 +11,7 @@ class HistoryItem {
     required this.bookName,
     required this.chapter,
     required this.verse,
+    this.endVerse,
     required this.text,
   });
 
@@ -19,6 +21,7 @@ class HistoryItem {
       'bookName': bookName,
       'chapter': chapter,
       'verse': verse,
+      'endVerse': endVerse,
       'text': text,
     };
   }
@@ -29,6 +32,7 @@ class HistoryItem {
       bookName: map['bookName'] as String? ?? '',
       chapter: map['chapter'] as int? ?? 1,
       verse: map['verse'] as int? ?? 1,
+      endVerse: map['endVerse'] as int?,
       text: map['text'] as String? ?? '',
     );
   }

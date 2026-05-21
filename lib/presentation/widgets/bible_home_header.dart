@@ -30,39 +30,43 @@ class BibleHomeHeader extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFC62828), Color(0xFFE53935)],
+                      gradient: LinearGradient(
+                        colors: [
+                          theme.colorScheme.primary,
+                          theme.colorScheme.primary.withOpacity(0.8),
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFFC62828).withOpacity(0.3),
-                          blurRadius: 4,
+                          color: theme.colorScheme.primary.withOpacity(0.25),
+                          blurRadius: 6,
                           offset: const Offset(0, 2),
                         ),
                       ],
                     ),
                     child: const Text(
-                      "Baiboly",
+                      "BAIBOLY",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.2,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: 8),
                   Text(
                     "FFPM",
                     style: theme.textTheme.titleLarge?.copyWith(
-                      fontSize: 15,
+                      fontSize: 16,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 0.5,
+                      color: theme.colorScheme.primary,
                     ),
                   ),
                 ],
@@ -73,7 +77,7 @@ class BibleHomeHeader extends StatelessWidget {
                     constraints: const BoxConstraints(),
                     padding: const EdgeInsets.only(right: 12),
                     onPressed: () => _showThemeSettings(context),
-                    icon: Icon(Icons.settings_outlined, size: 20, color: theme.colorScheme.onSurface),
+                    icon: Icon(Icons.palette_outlined, size: 22, color: theme.colorScheme.primary),
                   ),
                   IconButton(
                     constraints: const BoxConstraints(),
@@ -81,36 +85,43 @@ class BibleHomeHeader extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(context, NoAnimationPageRoute(builder: (_) => const BookmarksScreen()));
                     },
-                    icon: Icon(Icons.bookmark_outline, size: 20, color: theme.colorScheme.onSurface),
+                    icon: Icon(Icons.bookmark_outline, size: 22, color: theme.colorScheme.primary),
                   ),
                 ],
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           GestureDetector(
             onTap: () {
               Navigator.push(context, NoAnimationPageRoute(builder: (_) => const SearchScreen()));
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(30),
                 boxShadow: [
                   BoxShadow(
-                    color: theme.colorScheme.onSurface.withOpacity(0.04),
+                    color: theme.colorScheme.primary.withOpacity(0.06),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
                 ],
-                border: Border.all(color: theme.colorScheme.onSurface.withOpacity(0.05)),
+                border: Border.all(color: theme.colorScheme.primary.withOpacity(0.15), width: 1),
               ),
               child: Row(
                 children: [
                   Icon(Icons.search, size: 18, color: theme.colorScheme.primary),
-                  const SizedBox(width: 8),
-                  Text("Hikaroka andininy...", style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.5), fontSize: 13)),
+                  const SizedBox(width: 10),
+                  Text(
+                    "Hikaroka andininy...",
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withOpacity(0.5),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ],
               ),
             ),

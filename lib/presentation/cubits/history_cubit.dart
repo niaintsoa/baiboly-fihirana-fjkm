@@ -47,7 +47,8 @@ class HistoryCubit extends Cubit<HistoryState> {
       currentHistory.removeWhere((i) =>
           i.bookNumber == item.bookNumber &&
           i.chapter == item.chapter &&
-          i.verse == item.verse);
+          i.verse == item.verse &&
+          i.endVerse == item.endVerse);
 
       // Add to beginning
       currentHistory.insert(0, item);

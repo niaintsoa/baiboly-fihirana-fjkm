@@ -38,37 +38,78 @@ class BookGrid extends StatelessWidget {
       itemCount: books.length,
       itemBuilder: (context, index) {
         final book = books[index];
+        final catColor = _getBookCategoryColor(book.number);
         return InkWell(
           onTap: () => _showChapters(context, book),
-          borderRadius: BorderRadius.circular(4),
-            child: Container(
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withOpacity(0.06),
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: theme.colorScheme.primary.withOpacity(0.08),
-                    blurRadius: 6,
-                    offset: const Offset(0, 3),
-                  )
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  catColor.withOpacity(0.12),
+                  catColor.withOpacity(0.03),
                 ],
-                border: Border.all(color: theme.colorScheme.primary.withOpacity(0.05)),
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              child: Center(
-                child: Text(
-                  book.name,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                    color: theme.colorScheme.onSurface,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: catColor.withOpacity(0.2),
+                width: 0.8,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: catColor.withOpacity(0.04),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Stack(
+              children: [
+                Positioned(
+                  right: -8,
+                  bottom: -8,
+                  child: Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      color: catColor.withOpacity(0.08),
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ),
-              ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: Text(
+                      book.name,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
+          ),
         );
       },
     );
+  }
+
+  Color _getBookCategoryColor(int bookNumber) {
+    if (bookNumber <= 5) return const Color(0xFFE53935); // Pentateuch - Red
+    if (bookNumber <= 17) return const Color(0xFFFB8C00); // Historical - Orange
+    if (bookNumber <= 22) return const Color(0xFF00ACC1); // Poetic - Cyan
+    if (bookNumber <= 39) return const Color(0xFF8E24AA); // Prophets - Purple
+    if (bookNumber <= 43) return const Color(0xFF43A047); // Gospels - Green
+    if (bookNumber == 44) return const Color(0xFF1976D2); // Acts - Blue
+    if (bookNumber <= 65) return const Color(0xFFD81B60); // Epistles - Pink
+    return const Color(0xFF795548); // Revelation - Brown
   }
 
   void _showChapters(BuildContext context, BookModel book) {

@@ -95,7 +95,7 @@ class HistoryScreen extends StatelessWidget {
                         color: theme.colorScheme.primary,
                       ),
                       title: Text(
-                        '${item.bookName} ${item.chapter}:${item.verse}',
+                        '${item.bookName} ${item.chapter}:${item.verse}${item.endVerse != null && item.endVerse != item.verse ? "-${item.endVerse}" : ""}',
                         style: theme.textTheme.titleMedium?.copyWith(fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
@@ -119,6 +119,7 @@ class HistoryScreen extends StatelessWidget {
                                   book: book,
                                   initialChapter: item.chapter,
                                   initialVerse: item.verse,
+                                  initialEndVerse: item.endVerse,
                                 ),
                               ),
                             );
