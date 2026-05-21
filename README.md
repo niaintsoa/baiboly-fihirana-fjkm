@@ -1,17 +1,30 @@
-# baiboly_apk
+# Baiboly APK
 
-A new Flutter project.
+A cross-platform Malagasy Bible (Baiboly) application built with Flutter.
+
+## Features
+
+- **Bible Reader** — Browse books, chapters, and verses from the Malagasy Bible
+- **Fihirana** — Browse and read Malagasy hymns
+- **Search** — Search across all Bible verses and hymns
+- **Bookmarks** — Save and organize your favorite verses
+- **Customization** — Adjust font size, theme colors, and reading preferences
+
+## Tech Stack
+
+- **Flutter** — Cross-platform UI framework
+- **flutter_bloc** — State management
+- **sqflite** — Local SQLite database for Bible and hymn data
+- **shared_preferences** — User settings persistence
+- **google_fonts** — Typography
+
+## Platforms
+
+Android, iOS, Linux, macOS, Windows, Web.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+flutter pub get
+flutter run
+```
