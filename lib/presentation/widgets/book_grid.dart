@@ -40,24 +40,31 @@ class BookGrid extends StatelessWidget {
         return InkWell(
           onTap: () => _showChapters(context, book),
           borderRadius: BorderRadius.circular(4),
-          child: Container(
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: theme.colorScheme.primary.withOpacity(0.06)),
-            ),
-            child: Center(
-              child: Text(
-                book.name,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 11,
-                  color: theme.colorScheme.onSurface,
+            child: Container(
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withOpacity(0.4),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: theme.colorScheme.primary.withOpacity(0.2)),
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.colorScheme.primary.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  )
+                ],
+              ),
+              child: Center(
+                child: Text(
+                  book.name,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                    color: theme.colorScheme.onSurface,
+                  ),
                 ),
               ),
             ),
-          ),
         );
       },
     );
