@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:baiboly_apk/data/models/verse_model.dart';
+import 'package:baiboly_apk/presentation/cubits/preferences_cubit.dart';
 import 'package:baiboly_apk/core/utils/text_cleaner.dart';
 import 'package:baiboly_apk/presentation/cubits/bookmark_cubit.dart';
 import 'package:baiboly_apk/presentation/widgets/verse_actions_sheet.dart';
@@ -23,6 +24,7 @@ class VerseTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cleanedText = TextCleaner.cleanVerseText(verse.text, verse.verse);
+    final justifyText = context.select((PreferencesCubit c) => c.state.justifyText);
 
     return BlocBuilder<BookmarkCubit, BookmarkState>(
       builder: (context, bookmarkState) {
@@ -98,6 +100,7 @@ class VerseTile extends StatelessWidget {
                       ),
                     ],
                   ),
+                  textAlign: justifyText ? TextAlign.justify : TextAlign.start,
                 ),
               ),
             ),

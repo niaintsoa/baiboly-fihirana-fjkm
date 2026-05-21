@@ -49,10 +49,6 @@ class _VerseListViewState extends State<VerseListView> {
     });
   }
 
-  void _clearHighlight() {
-    if (_hiStart != null || _hiEnd != null) setState(() { _hiStart = null; _hiEnd = null; });
-  }
-
   bool _shouldHighlight(int num) {
     if (_hiStart == null) return false;
     return _hiEnd == null ? num == _hiStart : (num >= _hiStart! && num <= _hiEnd!);
@@ -89,7 +85,6 @@ class _VerseListViewState extends State<VerseListView> {
               verse: verse,
               baseFontSize: 15.0,
               isHighlighted: _shouldHighlight(verse.verse),
-              onTap: _clearHighlight,
             );
           },
         ),

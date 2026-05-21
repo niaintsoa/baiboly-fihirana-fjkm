@@ -88,6 +88,16 @@ class ThemeSettingsSheet extends StatelessWidget {
             const SizedBox(height: 8),
             BlocBuilder<PreferencesCubit, PreferencesState>(
               builder: (context, prefs) {
+                return SwitchListTile(
+                  title: const Text('Hampifanitsy ny andalana', style: TextStyle(fontSize: 12)),
+                  value: prefs.justifyText,
+                  onChanged: (val) => context.read<PreferencesCubit>().setJustifyText(val),
+                );
+              },
+            ),
+            const SizedBox(height: 8),
+            BlocBuilder<PreferencesCubit, PreferencesState>(
+              builder: (context, prefs) {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

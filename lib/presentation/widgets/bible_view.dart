@@ -272,10 +272,13 @@ class BibleView extends StatelessWidget {
     return InkWell(
       onTap: () {
         if (item.type == 'verse') {
-          final verseMap = jsonDecode(item.data);
-          final verse = VerseModel.fromMap(verseMap);
+          final dataMap = jsonDecode(item.data) as Map<String, dynamic>;
+          final bookNumber = dataMap['book_number'] as int? ?? dataMap['bookNumber'] as int? ?? dataMap['book'] as int? ?? dataMap['book_id'] as int? ?? 0;
+          final chapter = dataMap['chapter'] as int? ?? dataMap['chapter_number'] as int? ?? 0;
+          final verse = dataMap['verse'] as int? ?? dataMap['verse_number'] as int?;
+          final endVerse = dataMap['end_verse'] as int? ?? dataMap['endVerse'] as int? ?? dataMap['end_verse_number'] as int? ?? dataMap['endVerseNumber'] as int?;
           final book = allBooks.firstWhere(
-            (b) => b.number == verse.bookNumber,
+            (b) => b.number == bookNumber,
             orElse: () => BookModel.empty(),
           );
           if (book.number > 0) {
@@ -284,8 +287,9 @@ class BibleView extends StatelessWidget {
               NoAnimationPageRoute(
                 builder: (_) => ReaderScreen(
                   book: book,
-                  initialChapter: verse.chapter,
-                  initialVerse: verse.verse > 0 ? verse.verse : null,
+                  initialChapter: chapter > 0 ? chapter : 1,
+                  initialVerse: verse != null && verse > 0 ? verse : null,
+                  initialEndVerse: endVerse != null && endVerse > 0 ? endVerse : null,
                 ),
               ),
             );

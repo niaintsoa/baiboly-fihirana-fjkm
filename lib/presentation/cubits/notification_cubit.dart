@@ -36,6 +36,22 @@ class NotificationCubit extends Cubit<void> {
   }
 
   Future<void> _scheduleFromState(PreferencesState state) async {
+    if (state.dailyReadingEnabled || state.dailyWorshipEnabled) {
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+          _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
+      await androidImplementation?.requestPermission();
+
+      final IOSFlutterLocalNotificationsPlugin? iosImplementation =
+          _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>();
+      await iosImplementation?.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
+
     if (state.dailyReadingEnabled && state.dailyReadingTime.isNotEmpty) {
       await _scheduleDailyNotification(
         id: 1,

@@ -96,15 +96,37 @@ class _ReaderScreenState extends State<ReaderScreen> {
           IconButton(
             icon: const Icon(Icons.playlist_add, size: 20),
             onPressed: () {
+              final readerState = context.read<BibleReaderCubit>().state;
+              String subtitleText = 'Fandaharana';
+              int? targetVerse = widget.initialVerse != null && !_showAll ? widget.initialVerse : null;
+              int? targetEndVerse = widget.initialVerse != null && !_showAll ? widget.initialEndVerse : null;
+
+              if (readerState is BibleReaderLoaded && readerState.verses.isNotEmpty) {
+                if (targetVerse != null) {
+                  final vObj = readerState.verses.firstWhere(
+                    (v) => v.verse == targetVerse,
+                    orElse: () => readerState.verses.first,
+                  );
+                  subtitleText = vObj.text;
+                } else {
+                  subtitleText = readerState.verses.first.text;
+                }
+              }
+
               final item = FandaharanaItem(
-                id: 'verse_${widget.book.number}_c$_currentChapter',
+                id: 'verse_${widget.book.number}_c${_currentChapter}_v${targetVerse ?? 0}_e${targetEndVerse ?? 0}',
                 type: 'verse',
-                title: '${widget.book.name} Toko $_currentChapter',
-                subtitle: 'Fandaharana',
+                title: targetVerse != null
+                    ? '${widget.book.name} $_currentChapter:$targetVerse${targetEndVerse != null && targetEndVerse != targetVerse ? "-$targetEndVerse" : ""}'
+                    : '${widget.book.name} Toko $_currentChapter',
+                subtitle: subtitleText,
                 data: jsonEncode({
                   'book_number': widget.book.number,
                   'book_name': widget.book.name,
                   'chapter': _currentChapter,
+                  'verse': targetVerse,
+                  'end_verse': targetEndVerse,
+                  'text': subtitleText,
                 }),
               );
               context.read<FandaharanaCubit>().addItem(item);

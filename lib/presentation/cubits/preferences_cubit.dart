@@ -10,6 +10,7 @@ class PreferencesState {
   final bool dailyWorshipEnabled;
   final String dailyReadingTime; // HH:mm format
   final String dailyWorshipTime; // HH:mm format
+  final bool justifyText;
 
   PreferencesState({
     required this.themeMode,
@@ -20,6 +21,7 @@ class PreferencesState {
     this.dailyWorshipEnabled = false,
     this.dailyReadingTime = '',
     this.dailyWorshipTime = '',
+    this.justifyText = false,
   });
 
   PreferencesState copyWith({
@@ -31,6 +33,7 @@ class PreferencesState {
     bool? dailyWorshipEnabled,
     String? dailyReadingTime,
     String? dailyWorshipTime,
+    bool? justifyText,
   }) {
     return PreferencesState(
       themeMode: themeMode ?? this.themeMode,
@@ -41,6 +44,7 @@ class PreferencesState {
       dailyWorshipEnabled: dailyWorshipEnabled ?? this.dailyWorshipEnabled,
       dailyReadingTime: dailyReadingTime ?? this.dailyReadingTime,
       dailyWorshipTime: dailyWorshipTime ?? this.dailyWorshipTime,
+      justifyText: justifyText ?? this.justifyText,
     );
   }
 
@@ -56,6 +60,7 @@ class PreferencesCubit extends Cubit<PreferencesState> {
   static const String _dailyWorshipKey = 'prefs_daily_worship_enabled';
   static const String _readingTimeKey = 'prefs_daily_reading_time';
   static const String _worshipTimeKey = 'prefs_daily_worship_time';
+  static const String _justifyTextKey = 'prefs_justify_text';
 
   PreferencesCubit()
       : super(PreferencesState(
@@ -63,6 +68,7 @@ class PreferencesCubit extends Cubit<PreferencesState> {
           fontSize: 18.0,
           lineSpacing: 1.5,
           primaryColorValue: 0xFF8B2635,
+          justifyText: false,
         )) {
     loadPreferences();
   }
@@ -77,6 +83,7 @@ class PreferencesCubit extends Cubit<PreferencesState> {
     final dailyWorship = prefs.getBool(_dailyWorshipKey) ?? false;
     final readingTime = prefs.getString(_readingTimeKey) ?? '';
     final worshipTime = prefs.getString(_worshipTimeKey) ?? '';
+    final justifyText = prefs.getBool(_justifyTextKey) ?? false;
 
     emit(PreferencesState(
       themeMode: theme,
@@ -87,6 +94,7 @@ class PreferencesCubit extends Cubit<PreferencesState> {
       dailyWorshipEnabled: dailyWorship,
       dailyReadingTime: readingTime,
       dailyWorshipTime: worshipTime,
+      justifyText: justifyText,
     ));
   }
 
@@ -146,5 +154,11 @@ class PreferencesCubit extends Cubit<PreferencesState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_primaryColorKey, colorValue);
     emit(state.copyWith(primaryColorValue: colorValue));
+  }
+
+  Future<void> setJustifyText(bool justify) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_justifyTextKey, justify);
+    emit(state.copyWith(justifyText: justify));
   }
 }
