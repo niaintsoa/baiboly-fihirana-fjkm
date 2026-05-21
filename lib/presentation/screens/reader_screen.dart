@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:baiboly_apk/data/models/book_model.dart';
+import 'package:baiboly_apk/data/models/verse_model.dart';
 import 'package:baiboly_apk/presentation/cubits/bible_reader_cubit.dart';
 import 'package:baiboly_apk/presentation/cubits/bookmark_cubit.dart';
 import 'package:baiboly_apk/presentation/widgets/verse_list_view.dart';
@@ -83,20 +84,28 @@ class _ReaderScreenState extends State<ReaderScreen> {
         },
         itemBuilder: (context, idx) {
           final chIdx = idx + 1;
-          return BlocBuilder<BibleReaderCubit, BibleReaderState>(
-            builder: (context, state) {
-              if (state is BibleReaderLoading) return const Center(child: CircularProgressIndicator());
-              if (state is BibleReaderLoaded && state.currentChapter == chIdx) {
-                return VerseListView(
-                  verses: state.verses,
-                  initialVerse: chIdx == widget.initialChapter ? widget.initialVerse : null,
-                  initialEndVerse: chIdx == widget.initialChapter ? widget.initialEndVerse : null,
-                );
-              }
-              if (state is BibleReaderError) return Center(child: Text(state.message, style: const TextStyle(fontSize: 12)));
-              return const SizedBox.shrink();
-            },
-          );
+           return BlocBuilder<BibleReaderCubit, BibleReaderState>(
+             builder: (context, state) {
+               if (state is BibleReaderLoading) return const Center(child: CircularProgressIndicator());
+               if (state is BibleReaderLoaded && state.currentChapter == chIdx) {
+                 List<VerseModel> versesToShow = state.verses;
+                 if (chIdx == widget.initialChapter) {
+                   if (widget.initialVerse != null) {
+                     int start = widget.initialVerse!;
+                     int end = widget.initialEndVerse ?? widget.initialVerse!;
+                     versesToShow = state.verses.where((v) => v.verse >= start && v.verse <= end).toList();
+                   }
+                 }
+                 return VerseListView(
+                   verses: versesToShow,
+                   initialVerse: chIdx == widget.initialChapter ? widget.initialVerse : null,
+                   initialEndVerse: chIdx == widget.initialChapter ? widget.initialEndVerse : null,
+                 );
+               }
+               if (state is BibleReaderError) return Center(child: Text(state.message, style: const TextStyle(fontSize: 12)));
+               return const SizedBox.shrink();
+             },
+           );
         },
       ),
       bottomNavigationBar: _buildBottomNavBar(theme),
